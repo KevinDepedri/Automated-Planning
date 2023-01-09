@@ -51,102 +51,154 @@ Planutils is a suit of planners that allows to install a virtual environment whe
   activate planutils
   planutils setup
   ```
-  5. Download the required planners
+  5. Install the required planners
   ```bash
-  planutils install <downward|panda|tfd|optic>
+  planutils install <downward|panda|tfd|optic>  #Install one planner at time
   ```
   6. Run a chosen planner
   ```bash
-  <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl # (or .hddl for Panda)
+  <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl #Or .hddl for Panda
   ```
 
-## ROS2 installation:
-1) Set locale
+## PLANSYS2
+PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything.
+### ROS2
+1. Set locale
+  ```bash
 locale  # check for UTF-8
 sudo apt update && sudo apt install locales
 sudo locale-gen en_US en_US.UTF-8
 sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 export LANG=en_US.UTF-8
 locale  # verify settings
-
-2) Setup sources
+  ```
+  
+2. Setup sources
+  ```bash
 sudo apt install software-properties-common
 sudo add-apt-repository universe
+  ```
 
-3) Add the ROS 2 GPG key with apt
+3. Add the ROS 2 GPG key with apt
+  ```bash
 sudo apt update && sudo apt install curl
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+  ```
 
-4) Add the repository to your sources list
+4. Add the repository to your sources list
+  ```bash
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+  ```
 
-5) Update your apt repository caches after setting up the repositories and verify that all the currently installed packages are up to date before installing ROS2
+5. Update your apt repository caches after setting up the repositories and verify that all the currently installed packages are up to date before installing ROS2
+  ```bash
 sudo apt update
 sudo apt upgrade
+  ```
 
-6) Install ROS-Base (Bare Bones): Communication libraries, message packages, command line tools. No GUI tools (useless since we are working from WSL terminal).
+6. Install ROS-Base (Bare Bones): Communication libraries, message packages, command line tools. No GUI tools (useless since we are working from WSL terminal).
+  ```bash
 sudo apt install ros-humble-ros-base
+  ```
 
-COLCON for ROS2 installation:
-1) Get the files from the ROS2 repository and add its key to apt
+### COLCON for ROS2
+1. Get the files from the ROS2 repository and add its key to apt
+  ```bash
 sudo sh -c 'echo "deb [arch=amd64,arm64] http://repo.ros2.org/ubuntu/main `lsb_release -cs` main" > /etc/apt/sources.list.d/ros2-latest.list'
 curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+  ```
 
-2) Update your apt repository caches after setting up the repositories and the install the package using apt
+2. Update your apt repository caches after setting up the repositories and the install the package using apt
+  ```bash
 sudo apt update
 sudo apt install python3-colcon-common-extensions
+  ```
 
-ROSDEP
-1) Install rosdep
+### ROSDEP
+1. Install rosdep
+  ```bash
 sudo apt-get install python3-rosdep
+  ```
 
-2) Initialize and update it
+2. Initialize and update it
+  ```bash
 sudo rosdep init
 rosdep update
+  ```
 
-RUNNING ROS2
-0) Get to your workspace
+## RUNNING PLANSYS2 
+0. Get to your workspace
+  ```bash
 cd <your_workspace>
+  ```
 
-1) Get the github repo and store it in the downloaded folder
-git clone https://github.com/IntelligentRoboticsLabs/ros2_planning_system_examples.git downloaded
+1. Get the github repo and store it in the downloaded folder
+  ```bash
+git clone https://github.com/KevinDepedri/Automated-Planning.git downloaded
+  ```
 
 Now you will need 2 terminals. In terminal 1 follow this procedure
-2) Get inside a project folder
+(All this procedure is automatically exetcuted by running the file compile_and_run.sh present in the scripts folder)
+2. Get inside a project folder
+  ```bash
 cd downloaded/plansys2_task5/
+  ```
 
-3) Install ROS2 infrastrucutre for the current terminal
+3. Install ROS2 infrastrucutre for the current terminal
+  ```bash
 surce /opt/ros/humble/setup.bash
+  ```
 
-4) Compile the project a first time, it could lead to errors
+4. Compile the project a first time, it could lead to errors
+  ```bash
 colcon build --symlink-install
+  ```
 
-5) Now, install all the dependencies required by that project
+5. Now, install all the dependencies required by that project
+  ```bash
 rosdep install --from-paths ./ --ignore-src -r -y
+  ```
 
-6) Compile the project again, this time the compilation will be sucessful. If problem arises try to compile the code multiple times 
+6. Compile the project again, this time the compilation will be sucessful. If problem arises try to compile the code multiple times
+  ```bash 
 colcon build --symlink-install
+  ```
 
-7) Integrate ROS2 infrastrucutre with the plansys2 (that has been compiled in step 4) for the current terminal
+7. Integrate ROS2 infrastrucutre with the plansys2 (that has been compiled in step 4) for the current terminal
+  ```bash
 source install/setup.bash
+  ```
 
-8) Luch ROS2. Now this terminal will be used only to show the results
+8. Luch ROS2. Now this terminal will be used only to show the results
+  ```bash
 ros2 launch plansys2_task5 plansys2_task5_launch.py
+  ```
 
 In terminal 2 follow this procedure:
-9) Repeat step 2, 3 and 7 also for this terminal
+(All this procedure is automatically exetcuted by running the file run_terminal.sh present in the scripts folder)
+  ```bash
+9. Repeat step 2, 3 and 7 also for this terminal
 cd your_workspace/downloaded/plansys2_task5/
 surce /opt/ros/humble/setup.bash
 source install/setup.bash
+  ```
 
-10) Run ROS2-terminal. Now this terminal will be used as ROS-terminal to run all the possible ROS-commands
+10. Run ROS2-terminal. Now this terminal will be used as ROS-terminal to run all the possible ROS-commands
+  ```bash
 ros2 run plansys2_terminal plansys2_terminal
+  ```
 
-11) Source all the commands of the project (using the absolute path from your system root)
+11. Source all the commands of the project (using the absolute path from your system root)
+  ```bash
 source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/commands 1
+  ```
 
-12) Get a plan
+12. Get a plan
+  ```bash
 get plan
+  ```
 
-13) Run the plan. The status is visualized on the ROS2-terminal, the sum-up is visualized on the first terminal
+13. Run the plan. The status is visualized on the ROS2-terminal, the sum-up is visualized on the first terminal
+  ```bash
 run
+  ```
