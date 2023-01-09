@@ -165,7 +165,7 @@ rosdep install --from-paths ./ --ignore-src -r -y
 colcon build --symlink-install
   ```
 
-7. Integrate ROS2 infrastrucutre with the plansys2 (that has been compiled in step 4) for the current terminal
+7. Integrate ROS2 infrastrucutre with the PlanSys2 compiled in the previous step
   ```bash
 source install/setup.bash
   ```
@@ -192,7 +192,7 @@ ros2 run plansys2_terminal plansys2_terminal
 
 11. Source all the commands of the project (using the absolute path from your system root)
   ```bash
-source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/commands 1
+source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/commands 1 #Update this path according to your system
   ```
 
 12. Get a plan
