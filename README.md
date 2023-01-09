@@ -139,6 +139,7 @@ git clone https://github.com/KevinDepedri/Automated-Planning.git downloaded
 
 Now you will need 2 terminals. In terminal 1 follow this procedure
 (All this procedure is automatically exetcuted by running the file compile_and_run.sh present in the scripts folder)
+
 2. Get inside a project folder
   ```bash
 cd downloaded/plansys2_task5/
@@ -176,8 +177,9 @@ ros2 launch plansys2_task5 plansys2_task5_launch.py
 
 In terminal 2 follow this procedure:
 (All this procedure is automatically exetcuted by running the file run_terminal.sh present in the scripts folder)
-  ```bash
+
 9. Repeat step 2, 3 and 7 also for this terminal
+  ```bash
 cd your_workspace/downloaded/plansys2_task5/
 surce /opt/ros/humble/setup.bash
 source install/setup.bash
