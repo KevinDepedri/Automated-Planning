@@ -5,20 +5,21 @@ This repository is a student project developed by Kevin Depedri for the "Automat
 The repository is composed of:
 - Assignment pdf
 - A folder for each one of the 5 task described in the assignment
+- Report pdf
 - Guide to install all the needed material to run the code (this readme)
 
 Description of the 5 different tasks:
-  - Task 1: Basic structure of the problem developed in PDDL. Here we have a robotic agent which is appoited to bring the required supplies to some injured people. To run this task FastdownWard planner is required.
-  - Task 2: Extension of the previous problem developed in PDDL. Here the robotic agent has at its disposal a carrier which allows to transport supplies in a more efficient way. To run this task FastdownWard planner is required.
-  - Task 3: Conversion of task 2 from PDDL to HDDL. Here tasks and methods are introduced and made compatible with the previously developed actions. To run this task Pands planner is required.
-  - Task 4: Extension of task 2 to temportal domain. Here all the actions have a specific duration and some specific time constraints. The goal is obtained minimizing the time required. To run this task Optic planner or TemporalFastDownward planner is required.
+  - Task 1: Basic structure of the problem developed in PDDL. Here we have a robotic agent which is appoited to bring the required supplies to some injured people. To run this task FastDownard planner is required.
+  - Task 2: Extension of the previous problem developed in PDDL. Here the robotic agent has at its disposal a carrier which allows to transport supplies in a more efficient way. To run this task FastDownard planner is required.
+  - Task 3: Conversion of task 2 from PDDL to HDDL. Here tasks and methods are introduced and made compatible with the previously developed actions. To run this task Panda planner is required.
+  - Task 4: Extension of task 2 to temportal domain. All the actions have been updated with a specific duration and with some time constraints. The goal is obtained minimizing the required time. To run this task Optic planner or TemporalFastDownward planner is required.
   - Task 5: Extension of task 4 to a more sophisticate planner which allows to define a C++ code for each action. Once a plan is obtained (minimizing the time required) it is possible to run the plan, simulating the behavior of the proposed solution. The simulation is based on the implemented C++ codes. To run this task ROS2 and PlanSys2 are required.
 
 All the previously listed planners used are available and ready to install on Linux. The best option is to use a Linux machine. Another good and quick option is to install the Linux Kernel directly in Windows (supported on Windows 10/11). 
-To install the Linux kernel on Windows follow the next section. Otherwise, go directly to the section reagarding the installation of the planners on Linux.
+To install the Linux kernel on Windows follow the next section. Otherwise, go directly to the section regarding the installation of the planners on Linux.
 
 ****
-# WSL and Ubuntu installation
+# Installing WSL and Ubuntu
 WSL(Windows Subsystem for Linux) is the main component required to install and run a Linux Kernel directly on Windows. Once WSL is inistalled it is possible to install the Linux distribution that you prefer. Follow the ensuing steps to enable WSL and install the Ubuntu distro.
   1. Enable virtualizzation (task manager -> cpu -> virtualization, to see if it is already enabled). If it is not then enable it from the BIOS
   2. From start search for 'Enable disable windows features', here make sure 'Windows Subsystem for Linux' is enabled
@@ -36,12 +37,13 @@ sudo apt update
 sudo apt upgrade
 sudo apt-get python3-pip
 ```
+
 ****
-# Installation of the planners
+# Installing the planners
 ## PLANUTILS
 Planutils is a suit of planners that allows to install a virtual environment where planners can be quickly installed and runned. It requires singularity to work, which is based on GO. Follow the ensuing steps to install it.
-  1. Install GO
-  2. Install Singularity
+  1. Install GO [COMING SOON]
+  2. Install Singularity & Fix its options [COMING SOON]
   3. Install Planutils
   ```bash
   pip install planutils
@@ -55,13 +57,10 @@ Planutils is a suit of planners that allows to install a virtual environment whe
   ```bash
   planutils install <downward|panda|tfd|optic>  #Install one planner at time
   ```
-  6. Run a chosen planner
-  ```bash
-  <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl #Or .hddl for Panda
-  ```
 
 ## PLANSYS2
-PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything.
+PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything
+
 ### ROS2
 1. Set locale
   ```bash
@@ -126,81 +125,109 @@ sudo rosdep init
 rosdep update
   ```
 
-## RUNNING PLANSYS2 
-0. Get to your workspace
+***
+# Running the planners
+To run the planners on the domain and problem files of this assignment, first of all download this repository
+1. Get to your workspace
   ```bash
 cd <your_workspace>
   ```
-
-1. Get the github repo and store it in the downloaded folder
+  
+2. Get the github repo and store it in the `planning` folder
   ```bash
-git clone https://github.com/KevinDepedri/Automated-Planning.git downloaded
+git clone https://github.com/KevinDepedri/Automated-Planning.git planning
+  ```
+  
+## PLANUTILS
+To run one of the planner installed in planutils follow the ensuing procedure
+  1. Get to the folder of one of the following task
+    ```bash
+  cd <your_workspace>/planning/{task1|task2|task3|task4}
+    ```
+    
+  2. Activate planutils 
+  ```bash
+  activate planutils
+  ```
+  
+  3. Run the correct planner for that task according to the following list:
+  - Task1 & Task 2: downward
+  - Task3: panda
+  - Task4: optic or tfd (temporal fast downward)
+  ```bash
+  <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl  #Or .hddl for Panda
   ```
 
-Now you will need 2 terminals. In terminal 1 follow this procedure
-(All this procedure is automatically exetcuted by running the file compile_and_run.sh present in the scripts folder)
-
-2. Get inside a project folder
+## RUNNING PLANSYS2 
+Two terminals are necessary to run PlanSys2.
+#### TERMINAL 1
+Terminal one is used to build the dependencies, compile the project and host the PlanSys2 planner based on ROS. To do so follow the ensuing procedure
+1. Get inside the project folder
   ```bash
-cd downloaded/plansys2_task5/
+cd <your_workspace>/planning/task5/plansys2_task5/
   ```
 
-3. Install ROS2 infrastrucutre for the current terminal
+2. Install ROS2 infrastrucutre for the current terminal
   ```bash
 surce /opt/ros/humble/setup.bash
   ```
 
-4. Compile the project a first time, it could lead to errors
+3. Compile the project a first time, it could lead to errors
   ```bash
 colcon build --symlink-install
   ```
 
-5. Now, install all the dependencies required by that project
+4. Now, install all the dependencies required by that project
   ```bash
 rosdep install --from-paths ./ --ignore-src -r -y
   ```
 
-6. Compile the project again, this time the compilation will be sucessful. If problem arises try to compile the code multiple times
+5. Compile the project again, this time the compilation will be sucessful. If problem arises try to compile the code multiple times
   ```bash 
 colcon build --symlink-install
   ```
 
-7. Integrate ROS2 infrastrucutre with the PlanSys2 compiled in the previous step
+6. Integrate ROS2 infrastrucutre with the PlanSys2 compiled in the previous step
   ```bash
 source install/setup.bash
   ```
 
-8. Luch ROS2. Now this terminal will be used only to show the results
+7. Luch ROS2. Now this terminal will be used only to show the results
   ```bash
 ros2 launch plansys2_task5 plansys2_task5_launch.py
   ```
+  
+All the above listed procedure for terminal one is automatically exetcuted by running the file `compile_and_run.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
 
-In terminal 2 follow this procedure:
-(All this procedure is automatically exetcuted by running the file run_terminal.sh present in the scripts folder)
+#### TERINAL2
+Once terminal 1 has been set up, open a new terminal. Terminal two is used to run the PlanSys2_terminal, which is used to push into the planner all the wanted data (instances, predicates, goal), to compute a plan and to run it.
 
-9. Repeat step 2, 3 and 7 also for this terminal
+1. Repeat step 2, 3 and 7 also for this terminal
   ```bash
-cd your_workspace/downloaded/plansys2_task5/
+cd <your_workspace>/planning/task5/plansys2_task5/
 surce /opt/ros/humble/setup.bash
 source install/setup.bash
   ```
 
-10. Run ROS2-terminal. Now this terminal will be used as ROS-terminal to run all the possible ROS-commands
+2. Run ROS2-terminal
   ```bash
 ros2 run plansys2_terminal plansys2_terminal
   ```
 
-11. Source all the commands of the project (using the absolute path from your system root)
+3. Source the problem data (using the absolute path from your system root)
   ```bash
-source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/commands 1 #Update this path according to your system
+source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/problem_data 1  #Update this path according to your system
   ```
 
-12. Get a plan
+4. Get a plan
   ```bash
 get plan
   ```
 
-13. Run the plan. The status is visualized on the ROS2-terminal, the sum-up is visualized on the first terminal
+5. Run the plan. The status is visualized on the this terminal, the sum-up is visualized on the first terminal
   ```bash
 run
   ```
+  
+The first two steps of the above listed procedure for terminal two are automatically exetcuted by running the file `run_terminal.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
+***
