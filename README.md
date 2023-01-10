@@ -140,23 +140,23 @@ git clone https://github.com/KevinDepedri/Automated-Planning.git planning
   
 ## PLANUTILS
 To run one of the planner installed in planutils follow the ensuing procedure
-  1. Get to the folder of one of the following task
-    ```bash
-  cd <your_workspace>/planning/{task1|task2|task3|task4}
-    ```
-    
-  2. Activate planutils 
+1. Get to the folder of one of the following task
   ```bash
-  activate planutils
+cd <your_workspace>/planning/{task1|task2|task3|task4}
   ```
-  
-  3. Run the correct planner for that task according to the following list:
-  - Task1 & Task 2: downward
-  - Task3: panda
-  - Task4: optic or tfd (temporal fast downward)
-  ```bash
-  <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl  #Or .hddl for Panda
-  ```
+
+2. Activate planutils 
+```bash
+activate planutils
+```
+
+3. Run the correct planner for that task according to the following list:
+- Task1 & Task 2: downward
+- Task3: panda
+- Task4: optic or tfd (temporal fast downward)
+```bash
+<downward|panda|tfd|optic> your_domain.pddl your_problem.pddl  #Or .hddl for Panda
+```
 
 ## RUNNING PLANSYS2 
 Two terminals are necessary to run PlanSys2.
