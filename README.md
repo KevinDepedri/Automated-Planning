@@ -158,7 +158,7 @@ activate planutils
 <downward|panda|tfd|optic> your_domain.pddl your_problem.pddl  #Or .hddl for Panda
 ```
 
-## RUNNING PLANSYS2 
+## PLANSYS2 
 Two terminals are necessary to run PlanSys2.
 #### TERMINAL 1
 Terminal one is used to build the dependencies, compile the project and host the PlanSys2 planner based on ROS. To do so follow the ensuing procedure
