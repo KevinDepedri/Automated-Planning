@@ -202,7 +202,7 @@ All the above listed procedure for terminal one is automatically exetcuted by ru
 #### TERINAL2
 Once terminal 1 has been set up, open a new terminal. Terminal two is used to run the PlanSys2_terminal, which is used to push into the planner all the wanted data (instances, predicates, goal), to compute a plan and to run it.
 
-1. Repeat step 2, 3 and 7 also for this terminal
+1. Repeat step 1, 2 and 6 also for this terminal
   ```bash
 cd <your_workspace>/planning/task5/plansys2_task5/
 surce /opt/ros/humble/setup.bash
