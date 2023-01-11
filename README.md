@@ -27,9 +27,9 @@ WSL(Windows Subsystem for Linux) is the main component required to install and r
   ```shell
   wsl --install
   ```
-  4. Download Ubuntu from Windows store
+  4. Download [Ubuntu from Windows store](https://www.microsoft.com/store/productId/9PDXGNCFSCZV)
   5. Run Ubuntu directly from the installed icon or from Windows terminal (best option to use multiple terminals)
-  6. If Windows terminal is not installed then install it from the Windows store
+  6. If Windows terminal is not installed then [download it from the Windows store](https://www.microsoft.com/store/productId/9N0DX20HK701)
 
 Once in your Ubuntu run the following line of code to update your package and to get ready for the next steps
 ```bash
