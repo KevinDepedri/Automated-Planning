@@ -272,4 +272,15 @@ run
   ```
   
 The first two steps of the above listed procedure for terminal two are automatically exetcuted by running the file `run_terminal.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
+
 ***
+# Results of running the planners
+## Task 1
+
+## Task 2
+
+## Task 3
+
+## Task 4
+
+## Task 5
