@@ -241,7 +241,7 @@ ros2 launch plansys2_task5 plansys2_task5_launch.py
   
 All the above listed procedure for terminal one is automatically exetcuted by running the file `compile_and_run.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
 
-#### TERINAL2
+#### TERINAL 2
 Once terminal 1 has been set up, open a new terminal. Terminal two is used to run the PlanSys2_terminal, which is used to push into the planner all the wanted data (instances, predicates, goal), to compute a plan and to run it.
 
 1. Repeat step 1, 2 and 6 also for this terminal
