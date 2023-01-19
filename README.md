@@ -42,21 +42,63 @@ sudo apt-get python3-pip
 # Installing the planners
 ## PLANUTILS
 Planutils is a suit of planners that allows to install a virtual environment where planners can be quickly installed and runned. It requires singularity to work, which is based on GO. Follow the ensuing steps to install it.
-  1. Install GO [COMING SOON]
-  2. Install Singularity & Fix its options [COMING SOON]
-  3. Install Planutils
-  ```bash
-  pip install planutils
-  ```
-  4. Activate and setup planutils 
-  ```bash
-  activate planutils
-  planutils setup
-  ```
-  5. Install the required planners
-  ```bash
-  planutils install <downward|panda|tfd|optic>  #Install one planner at time
-  ```
+1. Install GO and Singularity
+```bash
+sudo apt-get update && \
+sudo apt-get install -y build-essential \
+libseccomp-dev pkg-config squashfs-tools cryptsetup
+
+sudo rm -r /usr/local/go
+
+export VERSION=1.17 OS=linux ARCH=amd64  # change this as you need
+
+wget -O /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz https://dl.google.com/go/go${VERSION}.${OS}-${ARCH}.tar.gz && \
+sudo tar -C /usr/local -xzf /tmp/go${VERSION}.${OS}-${ARCH}.tar.gz
+
+echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
+echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
+source ~/.bashrc
+
+curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh |
+sh -s -- -b $(go env GOPATH)/bin v1.21.0
+
+mkdir -p ${GOPATH}/src/github.com/sylabs && \
+cd ${GOPATH}/src/github.com/sylabs && \
+git clone https://github.com/sylabs/singularity.git && \
+cd singularity
+
+git checkout v3.6.3
+
+cd ${GOPATH}/src/github.com/sylabs/singularity && \
+./mconfig && \
+cd ./builddir && \
+make && \
+sudo make install
+```
+  
+2. Fix singularity mount host options
+```bash
+cd /usr/local/etc/singularity
+vim singularity.conf
+# Now press 'shift+I' to enter insert mode
+# Navigate down the file until the voice 'mount hostfs = no' is found
+# Change 'mount hostfs = no' in 'mount hostfs = yes'
+# Press 'esc', then type ':x' and press enter to save and exit
+```
+
+3. Install Planutils
+```bash
+pip install planutils
+```
+4. Activate and setup planutils 
+```bash
+activate planutils
+planutils setup
+```
+5. Install the required planners
+```bash
+planutils install <downward|panda|tfd|optic>  #Install one planner at time
+```
 
 ## PLANSYS2
 PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything
@@ -169,7 +211,7 @@ cd <your_workspace>/planning/task5/plansys2_task5/
 
 2. Install ROS2 infrastrucutre for the current terminal
   ```bash
-surce /opt/ros/humble/setup.bash
+source /opt/ros/humble/setup.bash
   ```
 
 3. Compile the project a first time, it could lead to errors
