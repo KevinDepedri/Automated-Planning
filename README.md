@@ -324,7 +324,7 @@ Running task 4 using *Optic* from planutils returns the following plan
 
 ![Task-4: Optic run, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%204/Optic%20-%20Solution%201%20-%20suboptimal.PNG)
 
-The search is then terminated since Optic does not allow to look for other plans. Unfortunately, the plan found above is suboptimal
+The search is then terminated since Optic does not allow to look for other plans. Unfortunately, the plan found above is suboptimal, this is due to the fact that the robot unload and loads itself uselessly at second 19 and 20, loosing 2 second over the time of the possible optimal solution.
 
 ## Task 5
 Running task 5 using PlanSys2 returns the following plan on the PlanSys2 terminal
@@ -334,4 +334,4 @@ Running task 5 using PlanSys2 returns the following plan on the PlanSys2 termina
 In the meanwhile, the PlanSys2 planner on the first terminal returns the following sum up of the actions performed
 ![Task-5: PlanSys2, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%205/ROS2%20-%20Solution%201%20-%20Suboptimal%20-%20RUN.PNG)
 
-The search is then terminated since PlanSys2 does not allow to look for other plans. Unfortunately, the plan found above is suboptimal
+The search is then terminated since PlanSys2 does not allow to look for other plans. Unfortunately, the plan found above is suboptimal, this is due to the fact that the robot unload and loads itself uselessly at second 23 and 28, loosing 2 second over the time of the possible optimal solution.
