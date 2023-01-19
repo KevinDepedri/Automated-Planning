@@ -274,7 +274,7 @@ run
 The first two steps of the above listed procedure for terminal two are automatically exetcuted by running the file `run_terminal.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
 
 ***
-# Results of running the planners
+# Results obtained running the planners
 ## Task 1
 Running task 1 using *Downward* from planutils returns the following plan
 
@@ -293,7 +293,7 @@ After a few second, the search returns the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%202.PNG)
 
-After almost 15 minutes, the searchs return the following improved plan
+After almost 15 minutes, the searchs returns the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 3](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%203.PNG)
 
