@@ -289,11 +289,11 @@ Running task 2 using *Downward* from planutils returns the following plan
 
 ![Task-2: Downward run with alias lama, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%201.PNG)
 
-After a few second, the search return the following improved plan
+After a few second, the search returns the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%202.PNG)
 
-After almost 15 minutes, the search return the following improved plan
+After almost 15 minutes, the searchs return the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 3](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%203.PNG)
 
@@ -311,11 +311,11 @@ That solution is based on the following list of hierarchical tasks, methods and 
 
 We can notice that this plan is not optimal due to the task `deliver_by_robot`. For this reason, since no options are available on panda to perform a larger search and look for alternative solutions, we have decided to comment the task that led to this suboptimal behavior. Then we ran again the search obtaining the following plan
 
-![Task-3: Panda run, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%203/PANDA%20-%20optimal%20-%20Solution%20commenting%20deliver_by_robot%20-%20hierarchy.PNG)
+![Task-3: Panda run, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%203/PANDA%20-%20optimal%20-%20Solution%20commenting%20deliver_by_robot.PNG)
 
 That solution is based on the following list of hierarchical tasks, methods and actions
 
-![Task-3: Panda run, solution 2, hierarchical](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%203/PANDA%20-%20optimal%20-%20Solution%20commenting%20deliver_by_robot.PNG)
+![Task-3: Panda run, solution 2, hierarchical](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%203/PANDA%20-%20optimal%20-%20Solution%20commenting%20deliver_by_robot%20-%20hierarchy.PNG)
 
 We can notice how this plan results to be optimal
 
@@ -327,11 +327,11 @@ Running task 4 using *Optic* from planutils returns the following plan
 The search is then terminated since Optic does not allow to look for other plans. Unfortunately, the plan found above is suboptimal
 
 ## Task 5
-Running task 5 using PlanSys2 returns the following plan on the plansys terminal
+Running task 5 using PlanSys2 returns the following plan on the PlanSys2 terminal
 
 ![Task-5: PlanSys2, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%205/ROS2%20-%20Solution%201%20-%20Suboptimal.PNG)
 
-In the meanwhile, the first terminal returns the following sum up of the action performed
+In the meanwhile, the PlanSys2 planner on the first terminal returns the following sum up of the actions performed
 ![Task-5: PlanSys2, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%205/ROS2%20-%20Solution%201%20-%20Suboptimal%20-%20RUN.PNG)
 
 The search is then terminated since PlanSys2 does not allow to look for other plans. Unfortunately, the plan found above is suboptimal
