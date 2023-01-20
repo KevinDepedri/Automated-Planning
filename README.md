@@ -216,7 +216,7 @@ cd <your_workspace>/planning/task3
 
 2. Run the planner
 ```bash
-java -jar PANDA.jar -parser hddltask3_domain_htn.hddl task3_problem_htn.hddl
+java -jar /c/Users/kevin/Desktop/PANDA/PANDA.jar -parser hddl task3_domain_htn.hddl task3_problem_htn.hddl
 ```
 
 ## PLANSYS2 
