@@ -68,8 +68,8 @@
 
     ;ADDITIONAL PREDICATES FOR TEMPORAL PLANNING
     ; The following predicate should be integrated into every action that we do not want to parallelize. The assumption in this problem is that no one of the possible actions can be parallelized,
-    ; so the predicate should be integrated into every action. This results into an important slow-down of the planner when computing the results. For this reason the predicate has been inserted
-    ; into all the actions, but it has been commented on the actions where it is not strictly necessary, since in these actions the other constratints are sufficient to avoid the parallelization.
+    ; so the predicate should be integrated into every action. This results into an important slow-down of the planner when looking for an optimal results. For this reason the predicate has been 
+    ; inserted into all the actions, but it has been commented on the actions where it is not strictly necessary, since in these actions the other constratints are sufficient to avoid the parallelization.
     
     ; Generally, we can say that only filling/unfilling of boxes and loading/unloading of the carrier absolutely need this constraints, since otherwise it would be possible to work on multiple 
     ; boxes in parallel. This because the base constraint of these actions are only linked with the box, and each box is independent from the others. 
