@@ -239,7 +239,11 @@ source install/setup.bash
 ros2 launch plansys2_task5 plansys2_task5_launch.py
   ```
   
-All the above listed procedure for terminal one is automatically exetcuted by running the file `compile_and_run.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
+All the above listed procedure for terminal1 is automatically exetcuted by running the file `compile_and_run.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
+  ```bash
+cd <your_workspace>/planning/task5/plansys2_task5/
+bash compile_and_run.sh
+  ```
 
 #### TERINAL 2
 Once terminal 1 has been set up, open a new terminal. Terminal two is used to run the PlanSys2_terminal, which is used to push into the planner all the wanted data (instances, predicates, goal), to compute a plan and to run it.
@@ -258,7 +262,7 @@ ros2 run plansys2_terminal plansys2_terminal
 
 3. Source the problem data (using the absolute path from your system root)
   ```bash
-source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/launch/problem_data 1  #Update this path according to your system
+source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
   ```
 
 4. Get a plan
@@ -271,7 +275,15 @@ get plan
 run
   ```
   
-The first two steps of the above listed procedure for terminal two are automatically exetcuted by running the file `run_terminal.sh` present in the scripts folder. If you want to use it remember first to open it and to change the path in the first line with the correct path for your system.
+The first two steps of the above listed procedure for terminal2 are automatically exetcuted by running the file `run_terminal.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
+  ```bash
+cd <your_workspace>/planning/task5/plansys2_task5/
+bash run_terminal.sh
+# One in the terminal run
+source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+get plan
+run
+  ```
 
 ***
 # Results obtained running the planners
@@ -297,7 +309,7 @@ After almost 15 minutes, the searchs returns the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 3](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%203.PNG)
 
-The search is then keept on running for more than 2 hours and eventually crashed due to memory constrains. Anyway, looking at the last plan computed we can assess that it is the optimal one, and that no better plan could be found
+Then, the search has kept on running for more than 2 hours and eventually crashed due to memory constrains. Anyway, looking at the last plan computed we can assess that it is the optimal one, and that no better plan could be found
 
 ![Task-2: Downward run with alias lama, end of search](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/Task%202/Lama%20-%20Solution%204%20-%20Crash%20at%202GB%20of%20RAM%20after%202hours.PNG)
 
