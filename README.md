@@ -104,7 +104,7 @@ planutils install <downward|tfd|optic>  #Install one planner at time
 
 ## PANDA
 Panda is a planner based on Java. it can be donwloaded and ran using the following commands
-1. Update the list of available package and install java
+1. Update the packages information and install java
 ```bash
 apt-get update
 apt install default-jre
