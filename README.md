@@ -38,6 +38,8 @@ sudo apt upgrade
 sudo apt-get python3-pip
 ```
 
+In this guide the root path used in all the bash code is `/mnt/c/Users/you_user/your_workspace/`. This is the path that need to be used in WSL to reach the file present in the directories which are normally accessible in windows. If you are following this guide using a native Linux OS then sobstitute these paths with the correct path for you.
+
 ****
 # Installing the planners
 ## PLANUTILS
@@ -97,8 +99,14 @@ planutils setup
 ```
 5. Install the required planners
 ```bash
-planutils install <downward|panda|tfd|optic>  #Install one planner at time
+planutils install <downward|tfd|optic>  #Install one planner at time
 ```
+
+## PANDA
+Panda is a planner based on Java. it can be donwloaded and ran using the following commands
+1. AAAA
+2. BBBB
+3. CCCC
 
 ## PLANSYS2
 PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything
@@ -182,9 +190,9 @@ git clone https://github.com/KevinDepedri/Automated-Planning.git planning
   
 ## PLANUTILS
 To run one of the planner installed in planutils follow the ensuing procedure
-1. Get to the folder of one of the following task
+1. Get to the folder of one of the following tasks
   ```bash
-cd <your_workspace>/planning/{task1|task2|task3|task4}
+cd <your_workspace>/planning/{task1|task2|task4}
   ```
 
 2. Activate planutils 
@@ -194,10 +202,21 @@ activate planutils
 
 3. Run the correct planner for that task according to the following list:
 - Task1 & Task 2: downward
-- Task3: panda
 - Task4: optic or tfd (temporal fast downward)
 ```bash
-<downward|panda|tfd|optic> your_domain.pddl your_problem.pddl  #Or .hddl for Panda
+<downward|panda|tfd|optic> taskX_domain.pddl taskX_problem.pddl  #Change the X with the number of the task
+```
+
+## PANDA
+To run the panda planner follow the ensuing procedure:
+1. Get to the folder of task 3
+  ```bash
+cd <your_workspace>/planning/task3
+  ```
+
+2. Run the planner
+```bash
+java -jar PANDA.jar -parser hddltask3_domain_htn.hddl task3_problem_htn.hddl
 ```
 
 ## PLANSYS2 
@@ -281,6 +300,8 @@ cd <your_workspace>/planning/task5/plansys2_task5/
 bash run_terminal.sh
 # One in the terminal run
 source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+# If at this points error like 'Could not add the predicate <name_of_predicate>' start to manifest, please stop both the terminals (pressing CTRL+C) and repeat the procedure for terminal1 and terminal2. This will fix the problem. 
+# If no problem arises, run the following commands
 get plan
 run
   ```
