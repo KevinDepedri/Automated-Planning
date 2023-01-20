@@ -104,9 +104,16 @@ planutils install <downward|tfd|optic>  #Install one planner at time
 
 ## PANDA
 Panda is a planner based on Java. it can be donwloaded and ran using the following commands
-1. AAAA
-2. BBBB
-3. CCCC
+1. Update the list of available package and install java
+```bash
+apt-get update
+apt install default-jre
+```
+2. Download PANDA planner in you workspace
+```bash
+cd <your_workspace>
+wget https://www.uni-ulm.de/fileadmin/website_uni_ulm/iui.inst.090/panda/PANDA.jar
+```
 
 ## PLANSYS2
 PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything
@@ -214,9 +221,9 @@ To run the panda planner follow the ensuing procedure:
 cd <your_workspace>/planning/task3
   ```
 
-2. Run the planner
+2. Run the planner jar file previusly downloaded from its path
 ```bash
-java -jar /c/Users/kevin/Desktop/PANDA/PANDA.jar -parser hddl task3_domain_htn.hddl task3_problem_htn.hddl
+ java -jar /mnt/c/Users/<your_user>/<your_workspace>/PANDA.jar -parser hddl task3_domain_htn.hddl task3_problem_htn.hddl
 ```
 
 ## PLANSYS2 
@@ -281,7 +288,7 @@ ros2 run plansys2_terminal plansys2_terminal
 
 3. Source the problem data (using the absolute path from your system root)
   ```bash
-source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+source /mnt/c/Users/<you_user>/<your_workspace>/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
   ```
 
 4. Get a plan
@@ -299,7 +306,7 @@ The first two steps of the above listed procedure for terminal2 are automaticall
 cd <your_workspace>/planning/task5/plansys2_task5/
 bash run_terminal.sh
 # One in the terminal run
-source /mnt/c/Users/you_user/your_workspace/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+source /mnt/c/Users/<ou_user>/<your_workspace>/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
 # If at this points error like 'Could not add the predicate <name_of_predicate>' start to manifest, please stop both the terminals (pressing CTRL+C) and repeat the procedure for terminal1 and terminal2. This will fix the problem. 
 # If no problem arises, run the following commands
 get plan
