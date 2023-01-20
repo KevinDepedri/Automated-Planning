@@ -1,0 +1,19 @@
+TERMINAL 1:
+desktop
+cd plansys2_task5
+ros
+rosdep install --from-paths ./ --ignore-src -r -y
+colcon build --symlink-install
+ros1
+ros2 launch plansys2_task5 plansys2_task5_launch.py
+
+TERMINAL 2:
+desktop
+cd plansys2_task5
+ros
+ros1
+ros2 run plansys2_terminal plansys2_terminal
+
+source /mnt/c/Users/kevin/Desktop/plansys2_task5/pddl/task5_problem 1
+get plan
+run

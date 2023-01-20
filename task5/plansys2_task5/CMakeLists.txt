@@ -1,0 +1,121 @@
+cmake_minimum_required(VERSION 3.5)
+project(plansys2_task5)
+
+
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(plansys2_msgs REQUIRED)
+find_package(plansys2_executor REQUIRED)
+
+set(CMAKE_CXX_STANDARD 17)
+
+set(dependencies
+    rclcpp
+    rclcpp_action
+    plansys2_msgs
+    plansys2_executor
+)
+
+add_executable(move_unloaded_robot_action_node src/move_unloaded_robot_action_node.cpp)
+ament_target_dependencies(move_unloaded_robot_action_node ${dependencies})
+
+add_executable(move_loaded_robot_action_node src/move_loaded_robot_action_node.cpp)
+ament_target_dependencies(move_loaded_robot_action_node ${dependencies})
+
+
+add_executable(load_robot_action_node src/load_robot_action_node.cpp)
+ament_target_dependencies(load_robot_action_node ${dependencies})
+
+add_executable(unload_robot_action_node src/unload_robot_action_node.cpp)
+ament_target_dependencies(unload_robot_action_node ${dependencies})
+
+
+add_executable(fill_box_with_supply_action_node src/fill_box_with_supply_action_node.cpp)
+ament_target_dependencies(fill_box_with_supply_action_node ${dependencies})
+
+add_executable(unfill_box_with_supply_action_node src/unfill_box_with_supply_action_node.cpp)
+ament_target_dependencies(unfill_box_with_supply_action_node ${dependencies})
+
+
+add_executable(move_1_loaded_carrier_action_node src/move_1_loaded_carrier_action_node.cpp)
+ament_target_dependencies(move_1_loaded_carrier_action_node ${dependencies})
+
+add_executable(move_1_2_loaded_carrier_action_node src/move_1_2_loaded_carrier_action_node.cpp)
+ament_target_dependencies(move_1_2_loaded_carrier_action_node ${dependencies})
+
+add_executable(move_1_2_3_loaded_carrier_action_node src/move_1_2_3_loaded_carrier_action_node.cpp)
+ament_target_dependencies(move_1_2_3_loaded_carrier_action_node ${dependencies})
+
+add_executable(move_1_2_3_4_loaded_carrier_action_node src/move_1_2_3_4_loaded_carrier_action_node.cpp)
+ament_target_dependencies(move_1_2_3_4_loaded_carrier_action_node ${dependencies})
+
+
+add_executable(load_carrier_position_1_action_node src/load_carrier_position_1_action_node.cpp)
+ament_target_dependencies(load_carrier_position_1_action_node ${dependencies})
+
+add_executable(load_carrier_position_2_action_node src/load_carrier_position_2_action_node.cpp)
+ament_target_dependencies(load_carrier_position_2_action_node ${dependencies})
+
+add_executable(load_carrier_position_3_action_node src/load_carrier_position_3_action_node.cpp)
+ament_target_dependencies(load_carrier_position_3_action_node ${dependencies})
+
+add_executable(load_carrier_position_4_action_node src/load_carrier_position_4_action_node.cpp)
+ament_target_dependencies(load_carrier_position_4_action_node ${dependencies})
+
+
+add_executable(unload_carrier_position_1_action_node src/unload_carrier_position_1_action_node.cpp)
+ament_target_dependencies(unload_carrier_position_1_action_node ${dependencies})
+
+add_executable(unload_carrier_position_2_action_node src/unload_carrier_position_2_action_node.cpp)
+ament_target_dependencies(unload_carrier_position_2_action_node ${dependencies})
+
+add_executable(unload_carrier_position_3_action_node src/unload_carrier_position_3_action_node.cpp)
+ament_target_dependencies(unload_carrier_position_3_action_node ${dependencies})
+
+add_executable(unload_carrier_position_4_action_node src/unload_carrier_position_4_action_node.cpp)
+ament_target_dependencies(unload_carrier_position_4_action_node ${dependencies})
+
+
+install(DIRECTORY launch pddl DESTINATION share/${PROJECT_NAME})
+
+install(TARGETS
+  move_loaded_robot_action_node
+  move_unloaded_robot_action_node
+
+  load_robot_action_node
+  unload_robot_action_node
+
+  fill_box_with_supply_action_node
+  unfill_box_with_supply_action_node
+
+  move_1_loaded_carrier_action_node
+  move_1_2_loaded_carrier_action_node
+  move_1_2_3_loaded_carrier_action_node
+  move_1_2_3_4_loaded_carrier_action_node
+
+  load_carrier_position_1_action_node
+  load_carrier_position_2_action_node
+  load_carrier_position_3_action_node
+  load_carrier_position_4_action_node
+
+  unload_carrier_position_1_action_node
+  unload_carrier_position_2_action_node
+  unload_carrier_position_3_action_node
+  unload_carrier_position_4_action_node
+
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+
+  find_package(ament_cmake_gtest REQUIRED)
+endif()
+
+ament_export_dependencies(${dependencies})
+
+ament_package()

@@ -1,0 +1,1030 @@
+(define (domain emergency_service_logistic_v3)
+ (:requirements :typing :hierachie :negative-preconditions :strips)
+ (:types
+    location                        ; There are several locations which are all connected as in a fully connected graph. There could be multiple person with different needs for each location
+
+    injured_person                  ; There is a specified number of injured person at some known position. They do not move and they need one or more specific supplies (food, medicine, tools)
+                                    ; each person has or does not has some specific supply. Example:(Has food|Has not medicine|Has tools).
+
+    robotic_agent                   ; There is a specified number of robotic agents (ONE) that can:
+                                    ; - Fill boxes if: agent, empty box and wanted content are at the same location
+                                    ; - Empty a box by leaving the content to the current location, causing a person that need this content at that location to receive it
+                                    ; - Pick up a single box and load it on itself. Its carry capacity is of only one box
+                                    ; - Move to another location, either loaded or not, if it is loaded also the loaded box is moved to the new location
+                                    ; - Once in a location it can deliver a box to a specific person. I assume that the robot need to unfill the box, give the content to that person and bring the box back
+
+    box                             ; There is a specified number of boxes at a specified initial location that can be filled with (ONE) specific content.
+                                    ; Boxes need to be delivered to a specific person that need the content. The content need to be extracted and the box need to be taken to reuse it (assumption)
+
+    supply - object                 ; Content of boxes need to be modeled in generic ways, so that new type of contents can be easily added
+    supply_food - supply            ; One of the possible supplies to put in the box is food
+    supply_medicine - supply        ; One of the possible supplies to put in the box is medicine
+    supply_tools - supply           ; One of the possible supplies to put in the box is tools
+
+    carrier                         ; Each carriers allows to transport a specific number of boxes which need to be defined in the problem file using one of the predicated defined below for CARRIER CAPACITY
+  )
+
+ (:predicates
+    ;LOCATION OF OBJECTS
+    (injured_person_located_at ?p - injured_person ?l - location)               ; Injured_person p is located at location l
+    (robotic_agent_located_at ?r - robotic_agent ?l - location)         ; Robotic_agent r is located at location l
+    (box_located_at ?b - box ?l - location)                           ; Box b is located at location l
+    (supply_located_at ?s - supply ?l - location)                               ; Supply s is located at location l
+    (carrier_is_located_at ?c - carrier ?l - location)                  ; Carrier c is located at location l
+    
+    ;BELONGING OF SUPPLIES      
+    (injured_person_has_supply ?p - injured_person ?s - supply)             ; Injured_person p has a specific supply
+    (injured_person_has_not_supply ?p - injured_person ?s - supply)         ; Injured_person p has not a specific supply
+
+    ;CONTENT OF BOXES
+    (box_has_not_supply ?b - box)                                        ; Box b is unfilled and has not any supply
+    (box_has_supply ?b - box ?s - supply)                                ; Box b is filled with a specific supply
+
+    ;STATES OF BOXES     
+    (box_is_unloaded ?b - box)                                           ; Box b is unloaded from any robotic agent / carrier
+    (box_is_loaded ?b - box ?r - robotic_agent)                          ; Box b is loaded on a specific robotic agent r
+    (box_is_carrier_loaded ?b - box ?c - carrier)                       ; Box b is loaded on a specific carrier c
+
+    ;STATES OF ROBOT
+    (robot_is_unloaded ?r - robotic_agent)                               ; Robotic_agent r is unloaded from any box
+    (robot_is_loaded ?r - robotic_agent ?b - box)                        ; Robotic_agent r is loaded with a spceific box b
+
+    ;CARRIER CAPACITY (Additional predicates can be defined to extend the capacity)
+    (carrier_capacity_1_boxes ?c - carrier)                                     ; Carrier c has a capacity of 1 box
+    (carrier_capacity_2_boxes ?c - carrier)                                     ; Carrier c has a capacity of 2 boxes
+    (carrier_capacity_3_boxes ?c - carrier)                                     ; Carrier c has a capacity of 3 boxes
+    (carrier_capacity_4_boxes ?c - carrier)                                     ; Carrier c has a capacity of 4 boxes
+
+    ;CARRIER STATE (Additional predicates can be defined to handle additional capacity, with additional load, unload and move actions)
+    (carrier_position_1_free ?c - carrier)                               ; Carrier c is unloaded in position 1
+    (carrier_position_2_free ?c - carrier)                               ; Carrier c is unloaded in position 2
+    (carrier_position_3_free ?c - carrier)                               ; Carrier c is unloaded in position 3
+    (carrier_position_4_free ?c - carrier)                               ; Carrier c is unloaded in position 4
+
+    (carrier_position_1_loaded ?c - carrier ?b - box)                    ; Carrier c is loaded in position 1
+    (carrier_position_2_loaded ?c - carrier ?b - box)                    ; Carrier c is loaded in position 2
+    (carrier_position_3_loaded ?c - carrier ?b - box)                    ; Carrier c is loaded in position 3
+    (carrier_position_4_loaded ?c - carrier ?b - box)                    ; Carrier c is loaded in position 4
+    )
+
+
+
+    ; GAOL TASKS
+    ; DELIVER SUPPLY TO INJURED PERSON --------------------------------------------------------------------------------------------------------------------------------
+    ; Deliver to an injured person 'p' a specific supply 'sr'. It is done in the most efficient way possible. Indeed, if a carrier is used (in the case that also the 
+    ; following task 'deliver_2_supply_to_injured_person' is used), then the supply specified by this current method will add it to the carrier and add a new delivery 
+    ; point for the carrier. Otherwise, the box is simply delivered by robot (for that result be sure that the method 'm_deliver_supply_by_robot' in un-commented)
+    (:task deliver_1_supply_to_injured_person
+		:parameters (?p - injured_person ?sr - supply)
+		:precondition ()
+		:effect ()
+	)
+
+    ; Deliver to an injured person a two specific supplies 'sr' and 'sc1' using the carrier
+    (:task deliver_2_supply_to_injured_person
+		:parameters (?p - injured_person ?sr ?sc1 - supply)
+		:precondition ()
+		:effect ()
+	)
+
+    ; Deliver to an injured person a three specific supplies 'sr', 'sc1' and 'sc2' using the carrier
+    (:task deliver_3_supply_to_injured_person
+		:parameters (?p - injured_person ?sr ?sc1 ?sc2 - supply)
+		:precondition ()
+		:effect ()
+	)
+    ; -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    ; OTHER TASKS
+    ; MOVE ROBOT TO A SPECIFIC LOCATION -------------------------------------------------------------------------------------------------------------------------------
+    ; Get the robot 'r' to the location 'to'
+	(:task get_robot_to_location
+		:parameters (?r - robotic_agent ?to - location)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+    
+    ; MOVE CARRIER TO A SPECIFIC LOCATION ---------------------------
+    ; Get the carrier 'c' from the location 'from' to the location 'to' with the robot 'r' driving it
+	(:task get_carrier_to_location
+		:parameters (?c - carrier ?r - robotic_agent ?from ?to - location)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; ROBOT FILL BOX-------------------------------------------------
+    ; Get the robot 'r' to fill the box 'b' with the supply 's' at location 'l'
+    (:task robot_fill_box
+		:parameters (?r - robotic_agent ?l - location ?b - box ?s - supply)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; LOAD ROBOT ----------------------------------------------------
+    ; Get the robot 'r' to load itself with the box 'b' at location 'l'
+	(:task robot_load_robot
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; LOAD CARRIER --------------------------------------------------
+    ; Get the robot 'r' to load the carrier 'c' with the box 'b' at location 'l'
+	(:task robot_load_carrier
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; UNLOAD ROBOT --------------------------------------------------
+    ; Get the robot 'r' to unload itself from the box 'b' at location 'l'
+	(:task robot_unload_robot
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; UNLOAD CARRIER ------------------------------------------------
+    ; Get the robot 'r' to unload the carrier 'c' from the box 'b' at location 'l'
+	(:task robot_unload_carrier
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:precondition ()
+		:effect ()
+	)
+    ; ---------------------------------------------------------------
+
+    ; ROBOT UNFILL BOX-----------------------------------------------
+    ; Get the robot 'r' to unfill the box 'b' from the supply 's' and giving the supply 's' at the person 'p' who needs it at location 'l'
+    (:task robot_unfill_box
+		:parameters (?r - robotic_agent ?l - location ?b - box ?p - injured_person ?s - supply)
+		:precondition ()
+		:effect ()
+	)
+    ; -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+    ; METHODS - USED TO REFINE TASKS
+    ; DELIVER SUPPLY TO INJURED PERSON --------------------------------------------------------------------------------------------------------------------------------
+    ; Deliver a specific supply to an injured person using just the robot
+    ; This first method need to be commented if we want to obtain the optimal solution for the problem defined in the problem file. This is done since otherwise the search 
+    ; is stopped to the first solution and it does not spend more resources to find the optimal one. Uncomment this method to see the other solution
+    ; (:method m_deliver_supply_by_robot
+	; 	:parameters (?r - robotic_agent ?from ?to - location ?b - box ?p - injured_person ?s - supply)
+	; 	:task (deliver_1_supply_to_injured_person ?p ?s)
+	; 	:subtasks (and
+    ;         (task0 (robot_fill_box ?r ?from ?b ?s))
+    ;         (task1 (robot_load_robot ?r ?from ?b))
+    ;         (task2 (get_robot_to_location ?r ?to))
+    ;         (task3 (robot_unload_robot ?r ?to ?b))
+    ;         (task4 (robot_unfill_box ?r ?to ?b ?p ?s))
+    ;         (task5 (robot_load_robot ?r ?to ?b))
+    ;         (task6 (get_robot_to_location ?r ?from))
+    ;         (task7 (robot_unload_robot ?r ?from ?b))
+	; 	)
+	; 	:ordering (and
+	;		(task0 < task1)
+	; 		(task1 < task2)
+	; 		(task2 < task3)
+	; 		(task3 < task4)
+	; 		(task4 < task5)
+	; 		(task5 < task6)
+	; 		(task6 < task7)
+	; 	)
+	; )
+
+    ; Deliver a specific supply to an injured person adding the box to a carrier which is already in use instead of using the robot. If no carrier in use call method above.
+    ; Useful method that allows us to be more efficient. Indeed, it this method was not present, when the goal task 'deliver_1_supply_to_injured_person' is called it would
+    ; automatically imply that this supply need to be delivered by the robot alone. Instead, by using this method, if a carrier is going to be used, then the delivery that
+    ; normally would be done by robot, will be converted to a delivery performed by carrier. Making the whole delivery process more efficient.
+    (:method m_deliver_supply_by_adding_to_carrier
+		:parameters (?r - robotic_agent ?from ?by ?to - location ?b - box ?p - injured_person ?s - supply ?c - carrier)
+		:task (deliver_1_supply_to_injured_person ?p ?s)
+		:subtasks (and
+            (task0 (robot_fill_box ?r ?from ?b ?s))
+            (task1 (robot_load_carrier ?r ?from ?b ?c))
+            (task2 (get_carrier_to_location ?c ?r ?by ?to))
+            (task3 (robot_unload_carrier ?r ?to ?b ?c))
+            (task4 (robot_unfill_box ?r ?to ?b ?p ?s))
+            (task5 (robot_load_carrier ?r ?to ?b ?c))
+            (task6 (robot_unload_carrier ?r ?from ?b ?c))
+		)
+		:ordering (and
+			(task0 < task1)
+			(task1 < task2)
+			(task2 < task3)
+			(task3 < task4)
+			(task4 < task5)
+			(task5 < task6)
+		)
+	)
+
+    ; Deliver two specific supplies to an injured person using the carrier
+    (:method m_deliver_supply_by_carrier_1
+		:parameters (?r - robotic_agent ?from ?by ?to - location ?rb ?cb1 - box ?p - injured_person ?sr ?sc1 - supply ?c - carrier)
+		:task (deliver_2_supply_to_injured_person ?p ?sr ?sc1)
+		:subtasks (and
+            (task0 (robot_fill_box ?r ?from ?rb ?sr))
+            (task1 (robot_load_robot ?r ?from ?rb))
+            (task2 (robot_fill_box ?r ?from ?cb1 ?sc1))
+            (task3 (robot_load_carrier ?r ?from ?cb1 ?c))
+            (task4 (get_carrier_to_location ?c ?r ?from ?to))
+            (task5 (robot_unload_robot ?r ?to ?rb))
+            (task6 (robot_unfill_box ?r ?to ?rb ?p ?sr))
+            (task7 (robot_load_robot ?r ?to ?rb))
+            (task8 (robot_unload_carrier ?r ?to ?cb1 ?c))
+            (task9 (robot_unfill_box ?r ?to ?cb1 ?p ?sc1))
+            (task10 (robot_load_carrier ?r ?to ?cb1 ?c))
+            (task11 (get_carrier_to_location ?c ?r ?by ?from))
+            (task12 (robot_unload_robot ?r ?from ?rb))
+            (task13 (robot_unload_carrier ?r ?from ?cb1 ?c))
+		)
+		:ordering (and
+			(task0 < task1)
+			(task1 < task2)
+			(task2 < task3)
+			(task3 < task4)
+			(task4 < task5)
+			(task5 < task6)
+			(task6 < task7)
+			(task7 < task8)
+			(task8 < task9)
+			(task9 < task10)
+			(task10 < task11)
+			(task11 < task12)
+			(task12 < task13)
+		)
+	)
+
+    ; Deliver three specific supplies to an injured person using the carrier
+    (:method m_deliver_supply_by_carrier_2
+		:parameters (?r - robotic_agent ?from ?by ?to - location ?rb ?cb1 ?cb2 - box ?p - injured_person ?sr ?sc1 ?sc2 - supply ?c - carrier)
+		:task (deliver_3_supply_to_injured_person ?p ?sr ?sc1 ?sc2)
+		:subtasks (and
+            (task0 (robot_fill_box ?r ?from ?rb ?sr))
+            (task1 (robot_load_robot ?r ?from ?rb))
+            (task2 (robot_fill_box ?r ?from ?cb1 ?sc1))
+            (task3 (robot_load_carrier ?r ?from ?cb1 ?c))
+            (task4 (robot_fill_box ?r ?from ?cb2 ?sc2))
+            (task5 (robot_load_carrier ?r ?from ?cb2 ?c))
+            (task6 (get_carrier_to_location ?c ?r ?from ?to))
+            (task7 (robot_unload_robot ?r ?to ?rb))
+            (task8 (robot_unfill_box ?r ?to ?rb ?p ?sr))
+            (task9 (robot_load_robot ?r ?to ?rb))
+            (task10 (robot_unload_carrier ?r ?to ?cb1 ?c))
+            (task11 (robot_unfill_box ?r ?to ?cb1 ?p ?sc1))
+            (task12 (robot_load_carrier ?r ?to ?cb1 ?c))
+            (task13 (robot_unload_carrier ?r ?to ?cb2 ?c))
+            (task14 (robot_unfill_box ?r ?to ?cb2 ?p ?sc2))
+            (task15 (robot_load_carrier ?r ?to ?cb2 ?c))
+            (task16 (get_carrier_to_location ?c ?r ?by ?from))
+            (task17 (robot_unload_robot ?r ?from ?rb))
+            (task18 (robot_unload_carrier ?r ?from ?cb1 ?c))
+            (task19 (robot_unload_carrier ?r ?from ?cb2 ?c))
+		)
+		:ordering (and
+			(task0 < task1)
+			(task1 < task2)
+			(task2 < task3)
+			(task3 < task4)
+			(task4 < task5)
+			(task5 < task6)
+			(task6 < task7)
+			(task7 < task8)
+			(task8 < task9)
+			(task9 < task10)
+			(task10 < task11)
+			(task11 < task12)
+			(task12 < task13)
+			(task13 < task14)
+			(task14 < task15)
+			(task15 < task16)
+			(task16 < task17)
+			(task17 < task18)
+			(task18 < task19)
+		)
+	)
+    ; ---------------------------------------------------------------
+    
+    ; GET ROBOT TO LOCATION -----------------------------------------
+    ; If the robot is already there just call the corresponding noop
+    (:method m_robot_is_already_there
+		:parameters (?r - robotic_agent ?to - location)
+		:task (get_robot_to_location ?r ?to)
+		:subtasks (and
+		    (task0 (noop_robot_already_in_position ?r ?to))
+		)
+	)
+
+    ; If the robot is not in position and it is unloaded then move the unloaded robot
+	(:method m_robot_unloaded_moves_to_location
+		:parameters (?r - robotic_agent ?from ?to - location)
+		:task (get_robot_to_location ?r ?to)
+		:subtasks (and
+		    (task0 (move_unloaded_robot ?r ?from ?to))
+		)
+	)
+
+    ; If the robot is not in position and it is loaded then move the loaded robot
+    (:method m_robot_loaded_moves_to_location
+		:parameters (?r - robotic_agent ?from ?to - location ?b - box)
+		:task (get_robot_to_location ?r ?to)
+		:subtasks (and
+		    (task0 (move_loaded_robot ?r ?from ?to ?b))
+		)
+	)
+    ; ---------------------------------------------------------------
+
+    ; GET CARRIER TO LOCATION ---------------------------------------
+    ; If the carrier is already there just call the corresponding noop
+    (:method m_carrier_is_already_there
+		:parameters (?c - carrier ?r - robotic_agent ?from ?to - location)
+		:task (get_carrier_to_location ?c ?r ?from ?to)
+		:subtasks (and
+		    (task0 (noop_carrier_already_in_position ?c ?to))
+		)
+	)
+
+    ; If the carrier is not in position and it is 1 loaded then move the 1_loaded carrier
+    (:method m_carrier_1_loaded_moves_to_location
+		:parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 - box)
+		:task (get_carrier_to_location ?c ?r ?from ?to)
+		:subtasks (and
+		    (task0 (move_1_loaded_carrier ?c ?r ?from ?to ?rb ?cb1))
+		)
+	)
+
+    ; If the carrier is not in position and it is 2 loaded then move the 1_2_loaded carrier
+    (:method m_carrier_2_loaded_moves_to_location
+		:parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 - box)
+		:task (get_carrier_to_location ?c ?r ?from ?to)
+		:subtasks (and
+		    (task0 (move_1_2_loaded_carrier ?c ?r ?from ?to ?rb ?cb1 ?cb2))
+		)
+	)
+
+    ; The following methods have been COMMENTED since otherwise Java runs out of memory while searching for a solution due a too extensive search space.
+    ; If they are needed for another problem instance they can be enabled paying attention to not overload the planner, or giving more memory to it.
+
+    ; If the carrier is not in position and it is 3 loaded then move the 1_2_3_loaded carrier
+    ; (:method m_carrier_3_loaded_moves_to_location
+	; 	:parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 ?cb3 - box)
+	; 	:task (get_carrier_to_location ?c ?r ?from ?to)
+	; 	:subtasks (and
+	; 	    (task0 (move_1_2_3_loaded_carrier ?c ?r ?from ?to ?rb ?cb1 ?cb2 ?cb3))
+	; 	)
+	; )
+
+    ; If the carrier is not in position and it is 4 loaded then move the 1_2_3_4_loaded carrier
+    ; (:method m_carrier_4_loaded_moves_to_location
+	; 	:parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 ?cb3 ?cb4 - box)
+	; 	:task (get_carrier_to_location ?c ?r ?from ?to)
+	; 	:subtasks (and
+	; 	    (task0 (move_1_2_3_4_loaded_carrier ?c ?r ?from ?to ?rb ?cb1 ?cb2 ?cb3 ?cb4))
+	; 	)
+	; )
+    ; ---------------------------------------------------------------
+
+    ; ROBOT FILL BOX-------------------------------------------------
+    ; If the box is already filled just call the corresponding noop
+	(:method m_box_already_filled
+		:parameters (?r - robotic_agent ?l - location ?b - box ?s - supply)
+		:task (robot_fill_box ?r ?l ?b ?s)
+		:subtasks (and
+		    (task0 (noop_box_already_filled ?b ?l ?s))
+		)
+	)
+
+    ; If the box is not filled then fill it with the correct supply
+	(:method m_robot_fill_box_with_supply
+		:parameters (?r - robotic_agent ?l - location ?b - box ?s - supply)
+		:task (robot_fill_box ?r ?l ?b ?s)
+		:subtasks (and
+		    (task0 (fill_box_with_supply ?r ?l ?b ?s))
+		)
+	)
+    ; ---------------------------------------------------------------
+
+    ; LOAD ROBOT ----------------------------------------------------
+    ; If the robot is already loaded just call the corresponding noop
+    (:method m_robot_already_loaded
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:task (robot_load_robot ?r ?l ?b)
+		:subtasks (and
+		    (task0 (noop_box_already_loaded ?b ?r))
+		)
+	)
+
+    ; If the box is not loaded then load it with the correct box
+	(:method m_load_robot
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:task (robot_load_robot ?r ?l ?b)
+		:subtasks (and
+		    (task0 (load_robot ?r ?l ?b))
+		)
+	)
+    ; ---------------------------------------------------------------
+    
+    ; UNLOAD ROBOT --------------------------------------------------
+    ; If the robot is already unloaded just call the corresponding noop
+    (:method m_robot_already_unloaded
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:task (robot_unload_robot ?r ?l ?b)
+		:subtasks (and
+		    (task0 (noop_box_already_unloaded ?b))
+		)
+	)
+
+    ; If the box is not unloaded then unload it from the correct box
+	(:method m_unload_robot
+		:parameters (?r - robotic_agent ?l - location ?b - box)
+		:task (robot_unload_robot ?r ?l ?b)
+		:subtasks (and
+		    (task0 (unload_robot ?r ?l ?b))
+		)
+	)
+    ; ---------------------------------------------------------------
+
+
+    ; LOAD CARRIER --------------------------------------------------
+    ; If the carrier is already loaded just call the corresponding noop
+    (:method m_carrier_already_loaded
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_load_carrier ?r ?l ?b ?c)
+		:subtasks (and
+		    (task0 (noop_box_already_carrier_loaded ?b ?c))
+		)
+	)
+
+    ; If the carrier is not loaded in position 1 then load the box in position 1 over it
+	(:method m_load_carrier_position_1
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_load_carrier ?r ?l ?b ?c) 
+		:subtasks (and
+		    (task0 (load_carrier_position_1 ?c ?r ?l ?b))
+		)
+	)
+
+    ; If the carrier is not loaded in position 2 then load the box in position 2 over it (possible only if the carrier is loaded also in position 1)
+    (:method m_load_carrier_position_2
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_load_carrier ?r ?l ?b ?c) 
+		:subtasks (and
+		    (task0 (load_carrier_position_2 ?c ?r ?l ?b))
+		)
+	)
+    
+    ; The following methods have been COMMENTED since otherwise Java runs out of memory while searching for a solution due a too extensive search space.
+    ; If they are needed for another problem instance they can be enabled paying attention to not overload the planner, or giving more memory to it.
+
+    ; If the carrier is not loaded in position 3 then load the box in position 3 over it (possible only if the carrier is loaded also in position 1 and 2)
+    ; (:method m_load_carrier_position_3
+	; 	:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+	; 	:task (robot_load_carrier ?r ?l ?b ?c) 
+	; 	:subtasks (and
+	; 	    (task0 (load_carrier_position_3 ?c ?r ?l ?b))
+	; 	)
+	; )
+    
+    ; If the carrier is not loaded in position 4 then load the box in position 4 over it (possible only if the carrier is loaded also in position 1, 2 and 3)
+    ; (:method m_load_carrier_position_4
+	; 	:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+	; 	:task (robot_load_carrier ?r ?l ?b ?c) 
+	; 	:subtasks (and
+	; 	    (task0 (load_carrier_position_4 ?c ?r ?l ?b))
+	; 	)
+	; )
+    ; ---------------------------------------------------------------
+    
+    ; UNLOAD CARRIER ------------------------------------------------
+    ; If the carrier is already unloaded just call the corresponding noop
+    (:method m_carrier_already_unloaded
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_unload_carrier ?r ?l ?b ?c)
+		:subtasks (and
+		    (task0 (noop_box_already_unloaded ?b))
+		)
+	)
+
+    ; If the carrier is loaded in position 1 then unload the box in position 1
+	(:method m_unload_carrier_1
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_unload_carrier ?r ?l ?b ?c)
+		:subtasks (and
+		    (task0 (unload_carrier_position_1 ?c ?r ?l ?b))
+		)
+	)
+
+    ; If the carrier is loaded in position 21 then unload the box in position 2
+    (:method m_unload_carrier_2
+		:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+		:task (robot_unload_carrier ?r ?l ?b ?c)
+		:subtasks (and
+		    (task0 (unload_carrier_position_2 ?c ?r ?l ?b))
+		)
+	)
+
+    ; The following methods have been COMMENTED since otherwise Java runs out of memory while searching for a solution due a too extensive search space.
+    ; If they are needed for another problem instance they can be enabled paying attention to not overload the planner, or giving more memory to it.
+    
+    ; If the carrier is loaded in position 3 then unload the box in position 3
+    ; (:method m_unload_carrier_3
+	; 	:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+	; 	:task (robot_unload_carrier ?r ?l ?b ?c)
+	; 	:subtasks (and
+	; 	    (task0 (unload_carrier_position_3 ?c ?r ?l ?b))
+	; 	)
+	; )
+
+    ; If the carrier is loaded in position 4 then unload the box in position 4
+    ; (:method m_unload_carrier_4
+	; 	:parameters (?r - robotic_agent ?l - location ?b - box ?c - carrier)
+	; 	:task (robot_unload_carrier ?r ?l ?b ?c)
+	; 	:subtasks (and
+	; 	    (task0 (unload_carrier_position_4 ?c ?r ?l ?b))
+	; 	)
+	; )
+    ; ---------------------------------------------------------------
+
+    ; ROBOT UNFILL BOX ----------------------------------------------
+    ; If the box is already unfilled just call the corresponding noop
+	(:method m_box_already_unfilled
+		:parameters (?r - robotic_agent ?l - location ?b - box ?p - injured_person ?s - supply)
+		:task (robot_unfill_box ?r ?l ?b ?p ?s)
+		:subtasks (and
+		    (task0 (noop_box_already_unfilled ?b ?l ?p ?s))
+		)
+	)
+
+    ; If the box is not unfilled then unfill it and give the supply to the person who needs it
+	(:method m_robot_unfill_box_with_supply
+		:parameters (?r - robotic_agent ?l - location ?b - box ?p - injured_person ?s - supply)
+		:task (robot_unfill_box ?r ?l ?b ?p ?s)
+		:subtasks (and
+		    (task0 (unfill_box_with_supply ?r ?l ?b ?p ?s))
+		)
+    )
+    ; -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+; ACTIONS - REFINEMENT OF METHODS
+; ADDITIONAL NOOP ACTIONS ---------------------------------------------------------------------------------------------------------------------------------------------
+    (:action noop_robot_already_in_position
+        :parameters (?r - robotic_agent ?to - location)
+        :precondition
+            (and
+                (robotic_agent_located_at ?r ?to)
+            )
+        :effect ()
+    )
+
+    (:action noop_carrier_already_in_position
+        :parameters (?c - carrier ?to - location)
+        :precondition
+            (and
+                (carrier_is_located_at ?c ?to)
+            )
+        :effect ()
+    )
+
+    
+    (:action noop_box_already_filled
+        :parameters (?b - box ?l - location ?s - supply)
+        :precondition
+            (and
+                (box_located_at ?b ?l)
+                (box_has_supply ?b ?s)
+            )
+        :effect ()
+    )    
+
+    (:action noop_box_already_loaded
+        :parameters (?b - box ?r - robotic_agent)
+        :precondition
+            (and
+                (box_is_loaded ?b ?r)
+                (robot_is_loaded ?r ?b)
+            )
+        :effect ()
+    )    
+
+    (:action noop_box_already_carrier_loaded
+        :parameters (?b - box ?c - carrier)
+        :precondition
+            (and
+                (box_is_carrier_loaded ?b ?c)
+                (or
+                    (carrier_position_1_loaded ?c ?b)
+                    (carrier_position_2_loaded ?c ?b)
+                    (carrier_position_3_loaded ?c ?b)
+                    (carrier_position_4_loaded ?c ?b)
+                )
+            )
+        :effect ()
+    )    
+
+    (:action noop_box_already_unloaded
+        :parameters (?b - box)
+        :precondition
+            (and
+                (box_is_unloaded ?b)
+            )
+        :effect ()
+    )
+
+    (:action noop_box_already_unfilled
+        :parameters (?b - box ?l - location ?p - injured_person ?s - supply)
+        :precondition
+            (and
+                (box_located_at ?b ?l)
+                (box_has_not_supply ?b)
+                (injured_person_has_supply ?p ?s)
+            )
+        :effect ()
+    )
+; -------------------------------------------------------------------
+
+; ORIGINAL ACTIONS from EXECRISE2 -----------------------------------
+; MOVE ROBOT (LOADED/UNLOADED) FROM A LOCATION TO ANOTHER
+; Moves an unloaded robot between two locations (adjacency not specified since all the locations are adjacent, with one single movement is possible to reach any of these)
+    (:action move_unloaded_robot
+     :parameters (?r - robotic_agent ?from ?to - location)
+     :precondition (and (robotic_agent_located_at ?r ?from) 
+                        (robot_is_unloaded ?r)
+                    )
+     :effect (and (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+            )
+    )
+
+; Moves a loaded robot between two locations, we are also moving the loaded package with it
+    (:action move_loaded_robot
+     :parameters (?r - robotic_agent ?from ?to - location ?b - box)
+     :precondition (and (robotic_agent_located_at ?r ?from) 
+                        (robot_is_loaded ?r ?b)
+                        (box_located_at ?b ?from)
+                        (box_is_loaded ?b ?r)
+                    )
+     :effect (and (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+                  (not(box_located_at ?b ?from))
+                      (box_located_at ?b ?to)
+            )
+    )
+
+
+; LOAD OR UNLOAD A ROBOT WITH A SPECIFIC BOX
+; Load a robot with a specific box
+    (:action load_robot
+     :parameters (?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (robotic_agent_located_at ?r ?l) 
+                        (robot_is_unloaded ?r)
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                    )
+     :effect (and (not(robot_is_unloaded ?r))
+                      (robot_is_loaded ?r ?b)
+                  (not(box_is_unloaded ?b))
+                      (box_is_loaded ?b ?r)
+            )
+    )
+
+; Unload the robot from the box loaded over it
+    (:action unload_robot
+     :parameters (?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (robotic_agent_located_at ?r ?l) 
+                        (robot_is_loaded ?r ?b)
+                        (box_located_at ?b ?l)
+                        (box_is_loaded ?b ?r)
+                    )
+     :effect (and (not(robot_is_loaded ?r ?b))
+                      (robot_is_unloaded ?r)
+                  (not(box_is_loaded ?b ?r))
+                      (box_is_unloaded ?b)
+            )
+    )
+
+; FILL OR UNFILL A BOX WITH A SPECIFIC SUPPLY
+; Fill a box with a specific supply, each supply is supposed to be unlimited at the depot and so it will not be consumed by the action of filling boxes
+    (:action fill_box_with_supply
+     :parameters (?r - robotic_agent ?l - location ?b - box ?s - supply)
+     :precondition (and (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (box_has_not_supply ?b)
+                        (supply_located_at ?s ?l)
+                    )
+     :effect (and (not(box_has_not_supply ?b))
+                      (box_has_supply ?b ?s)
+            )
+    )
+
+; Unfill a box with a specific supply, the supply is automatically given to a person that does not have it at the unfilling location
+    (:action unfill_box_with_supply
+     :parameters (?r - robotic_agent ?l - location ?b - box ?p - injured_person ?s - supply)
+     :precondition (and (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (box_has_supply ?b ?s)
+                        (injured_person_located_at ?p ?l)
+                        (injured_person_has_not_supply ?p ?s)
+                    )
+     :effect (and (not(box_has_supply ?b ?s))
+                      (box_has_not_supply ?b)
+                  (not(injured_person_has_not_supply ?p ?s))
+                      (injured_person_has_supply ?p ?s)
+            )
+    )
+
+
+; MOVE CARRIER FROM A LOCATION TO ANOTHER 
+; Moves a 1 loaded carrier between two locations, we are also moving the loaded package and the robot who drives it 
+; The robotic agent that drives it needs to be loaded. Indeed, loading the robot is always the fastes and cheapest option, so first we want to saturate the robot capacity, then we use the carrier
+    (:action move_1_loaded_carrier
+     :parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb - box)
+     :precondition (and (carrier_is_located_at ?c ?from)
+                        (robotic_agent_located_at ?r ?from) 
+                        (robot_is_loaded ?r ?rb)
+                        (box_located_at ?rb ?from)
+                        (box_is_loaded ?rb ?r)
+                        (box_located_at ?cb ?from)
+                        (box_is_carrier_loaded ?cb ?c)
+                        (carrier_position_1_loaded ?c ?cb)
+                        (carrier_position_2_free ?c)
+                        (carrier_position_3_free ?c)
+                        (carrier_position_4_free ?c)
+                    )
+     :effect (and (not(carrier_is_located_at ?c ?from))
+                      (carrier_is_located_at ?c ?to)
+                  (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+                  (not(box_located_at ?rb ?from))
+                      (box_located_at ?rb ?to)
+                  (not(box_located_at ?cb ?from))
+                      (box_located_at ?cb ?to)
+            )
+    )
+
+; ; Moves a 2 loaded carrier between two locations, we are also moving the loaded package and the robot who drives it 
+; ; The robotic agent that drives it needs to be loaded. Indeed, loading the robot is always the fastes and cheapest option, so first we want to saturate the robot capacity, then we use the carrier
+; ; We assume that the carrier need always to be filled from top to bottom to be moved. I.e., if it is loaded in position 2, then it need to be loaded also in position 1 to be moved
+    (:action move_1_2_loaded_carrier
+     :parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 - box)
+     :precondition (and (carrier_is_located_at ?c ?from)
+                        (robotic_agent_located_at ?r ?from) 
+                        (robot_is_loaded ?r ?rb)
+                        (box_located_at ?rb ?from)
+                        (box_is_loaded ?rb ?r)
+                        (box_located_at ?cb1 ?from)
+                        (box_is_carrier_loaded ?cb1 ?c)
+                        (carrier_position_1_loaded ?c ?cb1)
+                        (box_located_at ?cb2 ?from)
+                        (box_is_carrier_loaded ?cb2 ?c)
+                        (carrier_position_2_loaded ?c ?cb2)
+                        (carrier_position_3_free ?c)
+                        (carrier_position_4_free ?c)
+                    )
+     :effect (and (not(carrier_is_located_at ?c ?from))
+                      (carrier_is_located_at ?c ?to)
+                  (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+                  (not(box_located_at ?rb ?from))
+                      (box_located_at ?rb ?to)
+                  (not(box_located_at ?cb1 ?from))
+                      (box_located_at ?cb1 ?to)
+                  (not(box_located_at ?cb2 ?from))
+                      (box_located_at ?cb2 ?to)
+            )
+    )
+
+; Moves a 3 loaded carrier between two locations, we are also moving the loaded package and the robot who drives it 
+; The robotic agent that drives it needs to be loaded. Indeed, loading the robot is always the fastes and cheapest option, so first we want to saturate the robot capacity, then we use the carrier
+; We assume that the carrier need always to be filled from top to bottom to be moved. I.e., if it is loaded in position 3, then it need to be loaded also in position 1 and 2 to be moved
+    (:action move_1_2_3_loaded_carrier
+     :parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 ?cb3 - box)
+     :precondition (and (carrier_is_located_at ?c ?from)
+                        (robotic_agent_located_at ?r ?from) 
+                        (robot_is_loaded ?r ?rb)
+                        (box_located_at ?rb ?from)
+                        (box_is_loaded ?rb ?r)
+                        (box_located_at ?cb1 ?from)
+                        (box_is_carrier_loaded ?cb1 ?c)
+                        (carrier_position_1_loaded ?c ?cb1)
+                        (box_located_at ?cb2 ?from)
+                        (box_is_carrier_loaded ?cb2 ?c)
+                        (carrier_position_2_loaded ?c ?cb2)
+                        (box_located_at ?cb3 ?from)
+                        (box_is_carrier_loaded ?cb3 ?c)
+                        (carrier_position_3_loaded ?c ?cb3)
+                        (carrier_position_4_free ?c)
+                    )
+     :effect (and (not(carrier_is_located_at ?c ?from))
+                      (carrier_is_located_at ?c ?to)
+                  (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+                  (not(box_located_at ?rb ?from))
+                      (box_located_at ?rb ?to)
+                  (not(box_located_at ?cb1 ?from))
+                      (box_located_at ?cb1 ?to)
+                  (not(box_located_at ?cb2 ?from))
+                      (box_located_at ?cb2 ?to)
+                  (not(box_located_at ?cb3 ?from))
+                      (box_located_at ?cb3 ?to)
+            )
+    )
+
+; Moves a 4 loaded carrier between two locations, we are also moving the loaded package and the robot who drives it 
+; The robotic agent that drives it needs to be loaded. Indeed, loading the robot is always the fastes and cheapest option, so first we want to saturate the robot capacity, then we use the carrier
+; We assume that the carrier need always to be filled from top to bottom to be moved. I.e., if it is loaded in position 4, then it need to be loaded also in position 1, 2 and 3 to be moved
+    (:action move_1_2_3_4_loaded_carrier
+     :parameters (?c - carrier ?r - robotic_agent ?from ?to - location ?rb ?cb1 ?cb2 ?cb3 ?cb4 - box)
+     :precondition (and (carrier_is_located_at ?c ?from)
+                        (robotic_agent_located_at ?r ?from) 
+                        (robot_is_loaded ?r ?rb)
+                        (box_located_at ?rb ?from)
+                        (box_is_loaded ?rb ?r)
+                        (box_located_at ?cb1 ?from)
+                        (box_is_carrier_loaded ?cb1 ?c)
+                        (carrier_position_1_loaded ?c ?cb1)
+                        (box_located_at ?cb2 ?from)
+                        (box_is_carrier_loaded ?cb2 ?c)
+                        (carrier_position_2_loaded ?c ?cb2)
+                        (box_located_at ?cb3 ?from)
+                        (box_is_carrier_loaded ?cb3 ?c)
+                        (carrier_position_3_loaded ?c ?cb3)
+                        (box_located_at ?cb4 ?from)
+                        (box_is_carrier_loaded ?cb4 ?c)
+                        (carrier_position_4_loaded ?c ?cb4)
+                    )
+     :effect (and (not(carrier_is_located_at ?c ?from))
+                      (carrier_is_located_at ?c ?to)
+                  (not(robotic_agent_located_at ?r ?from))
+                      (robotic_agent_located_at ?r ?to)
+                  (not(box_located_at ?rb ?from))
+                      (box_located_at ?rb ?to)
+                  (not(box_located_at ?cb1 ?from))
+                      (box_located_at ?cb1 ?to)
+                  (not(box_located_at ?cb2 ?from))
+                      (box_located_at ?cb2 ?to)
+                  (not(box_located_at ?cb3 ?from))
+                      (box_located_at ?cb3 ?to)
+                  (not(box_located_at ?cb4 ?from))
+                      (box_located_at ?cb4 ?to)
+            )
+    )
+
+
+; LOAD A CARRIER WITH A SPECIFIC NUMBER OF BOXES
+; Boxes are loaded in the first available position. Each position can then be unloaded independently from which other positions are already filled. This allows us always be able to unload the
+; wanted box without needing to unload other boxes In this way we also avoid all the positional attributes (like: ?b1 ?b2 ?b3) that we already have in the move_XXX_loaded_carrier action. 
+; This enables us to reason about one boxes at time using the correct predicate which specifies the postion of the wanted box in the name of the predicate.
+
+; Load a carrier with a box in the first box position
+    (:action load_carrier_position_1
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l) 
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (carrier_position_1_free ?c)
+                        (carrier_capacity_1_boxes ?c)
+                    )
+     :effect (and (not(carrier_position_1_free ?c))
+                      (carrier_position_1_loaded ?c ?b)
+                  (not(box_is_unloaded ?b))
+                      (box_is_carrier_loaded ?b ?c)
+            )
+    )
+
+    ; Load a carrier with a box in the second box position. To load in position 2 then the position 1 need to be already used. Instead, unloading position 2 is always possible (see below)
+    (:action load_carrier_position_2
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l) 
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (not(carrier_position_1_free ?c))
+                        (carrier_position_2_free ?c)
+                        (carrier_capacity_2_boxes ?c)
+                    )
+     :effect (and (not(carrier_position_2_free ?c))
+                      (carrier_position_2_loaded ?c ?b)
+                  (not(box_is_unloaded ?b))
+                      (box_is_carrier_loaded ?b ?c)
+            )
+    )
+
+    ; Load a carrier with a box in the third box position. To load in position 3 then the position 1 and 2 need to be already used. Instead, unloading position 3 is always possible (see below)
+    (:action load_carrier_position_3
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l) 
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (not(carrier_position_1_free ?c))
+                        (not(carrier_position_2_free ?c))
+                        (carrier_position_3_free ?c)
+                        (carrier_capacity_3_boxes ?c)
+                    )
+     :effect (and (not(carrier_position_3_free ?c))
+                      (carrier_position_3_loaded ?c ?b)
+                  (not(box_is_unloaded ?b))
+                      (box_is_carrier_loaded ?b ?c)
+            )
+    )
+
+    ; Load a carrier with a box in the fourth box position. To load in position 4 then the position 1, 2 and 3 need to be already used. Instead, unloading position 4 is always possible (see below)
+    (:action load_carrier_position_4
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l) 
+                        (box_located_at ?b ?l)
+                        (box_is_unloaded ?b)
+                        (not(carrier_position_1_free ?c))
+                        (not(carrier_position_2_free ?c))
+                        (not(carrier_position_3_free ?c))
+                        (carrier_position_4_free ?c)
+                        (carrier_capacity_4_boxes ?c)
+                    )
+     :effect (and (not(carrier_position_4_free ?c))
+                      (carrier_position_4_loaded ?c ?b)
+                  (not(box_is_unloaded ?b))
+                      (box_is_carrier_loaded ?b ?c)
+            )
+    )
+
+
+; UNLOAD A CARRIER FROM A SPECIFIC NUMBER OF BOXES
+; Unload a carrier from the box in the first box position
+    (:action unload_carrier_position_1
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_carrier_loaded ?b ?c) 
+                        (carrier_position_1_loaded ?c ?b)
+                    )
+     :effect (and (not(carrier_position_1_loaded ?c ?b))
+                      (carrier_position_1_free ?c)
+                  (not(box_is_carrier_loaded ?b ?c))
+                      (box_is_unloaded ?b)
+            )
+    )
+
+; Unload a carrier from the box in the second box position
+    (:action unload_carrier_position_2
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_carrier_loaded ?b ?c) 
+                        (carrier_position_2_loaded ?c ?b)
+                    )
+     :effect (and (not(carrier_position_2_loaded ?c ?b))
+                      (carrier_position_2_free ?c)
+                  (not(box_is_carrier_loaded ?b ?c))
+                      (box_is_unloaded ?b)
+            )
+    )
+    
+; Unload a carrier from the box in the third box position
+    (:action unload_carrier_position_3
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_carrier_loaded ?b ?c) 
+                        (carrier_position_3_loaded ?c ?b)
+                    )
+     :effect (and (not(carrier_position_3_loaded ?c ?b))
+                      (carrier_position_3_free ?c)
+                  (not(box_is_carrier_loaded ?b ?c))
+                      (box_is_unloaded ?b)
+            )
+    )
+
+; Unload a carrier from the box in the fourth box position
+    (:action unload_carrier_position_4
+     :parameters (?c - carrier ?r - robotic_agent ?l - location ?b - box)
+     :precondition (and (carrier_is_located_at ?c ?l)
+                        (robotic_agent_located_at ?r ?l)
+                        (box_located_at ?b ?l)
+                        (box_is_carrier_loaded ?b ?c) 
+                        (carrier_position_4_loaded ?c ?b)
+                    )
+     :effect (and (not(carrier_position_4_loaded ?c ?b))
+                      (carrier_position_4_free ?c)
+                  (not(box_is_carrier_loaded ?b ?c))
+                      (box_is_unloaded ?b)
+            )
+    )
+)

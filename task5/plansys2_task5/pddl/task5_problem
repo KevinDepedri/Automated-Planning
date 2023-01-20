@@ -1,0 +1,59 @@
+set instance l0 location
+set instance l1 location
+set instance l2 location
+set instance l3 location
+set instance l4 location
+set instance p1 injured_person
+set instance p2 injured_person
+set instance r1 robotic_agent
+set instance b1 box
+set instance b2 box
+set instance b3 box
+set instance b4 box
+set instance b5 box
+set instance food supply_food
+set instance medicine supply_medicine
+set instance tools supply_tools
+set instance c1 carrier
+
+
+set predicate (injured_person_located_at p1 l2)
+set predicate (injured_person_located_at p2 l4)
+set predicate (injured_person_has_not_supply p1 food)
+set predicate (injured_person_has_not_supply p1 medicine)
+set predicate (injured_person_has_not_supply p1 tools)
+set predicate (injured_person_has_supply p2 food)
+set predicate (injured_person_has_supply p2 medicine)
+set predicate (injured_person_has_not_supply p2 tools)
+set predicate (robotic_agent_located_at r1 l0)
+set predicate (robot_is_unloaded r1)
+set predicate (robot_is_not_busy r1)
+set predicate (box_located_at b1 l0)
+set predicate (box_located_at b2 l0)
+set predicate (box_located_at b3 l0)
+set predicate (box_located_at b4 l0)
+set predicate (box_located_at b5 l0)
+set predicate (box_is_unloaded b1)
+set predicate (box_is_unloaded b2)
+set predicate (box_is_unloaded b3)
+set predicate (box_is_unloaded b4)
+set predicate (box_is_unloaded b5)
+set predicate (box_has_not_supply b1)
+set predicate (box_has_not_supply b2)
+set predicate (box_has_not_supply b3)
+set predicate (box_has_not_supply b4)
+set predicate (box_has_not_supply b5)
+set predicate (supply_located_at food l0)
+set predicate (supply_located_at medicine l0)
+set predicate (supply_located_at tools l0)
+set predicate (carrier_is_located_at c1 l0)
+set predicate (carrier_capacity_1_boxes c1) 
+set predicate (carrier_capacity_2_boxes c1)
+set predicate (carrier_capacity_3_boxes c1) 
+set predicate (carrier_capacity_4_boxes c1)
+set predicate (carrier_position_1_free c1) 
+set predicate (carrier_position_2_free c1) 
+set predicate (carrier_position_3_free c1) 
+set predicate (carrier_position_4_free c1)
+
+set goal (and (injured_person_has_supply p1 food) (injured_person_has_supply p1 medicine) (injured_person_has_supply p2 tools) (robotic_agent_located_at r1 l0) (robot_is_unloaded r1) (box_located_at b1 l0) (box_located_at b2 l0) (box_located_at b3 l0) (box_located_at b4 l0) (box_located_at b5 l0) (box_is_unloaded b1) (box_is_unloaded b2) (box_is_unloaded b3) (box_is_unloaded b4) (box_is_unloaded b5) (box_has_not_supply b1) (box_has_not_supply b2) (box_has_not_supply b3) (box_has_not_supply b4) (box_has_not_supply b5) (carrier_is_located_at c1 l0) (carrier_position_1_free c1) (carrier_position_2_free c1) (carrier_position_3_free c1) (carrier_position_4_free c1))
