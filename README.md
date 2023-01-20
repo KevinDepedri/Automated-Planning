@@ -211,7 +211,7 @@ activate planutils
 - Task1 & Task 2: downward
 - Task4: optic or tfd (temporal fast downward)
 ```bash
-<downward|panda|tfd|optic> taskX_domain.pddl taskX_problem.pddl  #Change the X with the number of the task
+<downward|tfd|optic> taskX_domain.pddl taskX_problem.pddl  #Change the X with the number of the task
 ```
 
 ## PANDA
@@ -277,7 +277,7 @@ Once terminal 1 has been set up, open a new terminal. Terminal two is used to ru
 1. Repeat step 1, 2 and 6 also for this terminal
   ```bash
 cd <your_workspace>/planning/task5/plansys2_task5/
-surce /opt/ros/humble/setup.bash
+source /opt/ros/humble/setup.bash
 source install/setup.bash
   ```
 
@@ -306,7 +306,7 @@ The first two steps of the above listed procedure for terminal2 are automaticall
 cd <your_workspace>/planning/task5/plansys2_task5/
 bash run_terminal.sh
 # One in the terminal run
-source /mnt/c/Users/<ou_user>/<your_workspace>/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+source /mnt/c/Users/<your_user>/<your_workspace>/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
 # If at this points error like 'Could not add the predicate <name_of_predicate>' start to manifest, please stop both the terminals (pressing CTRL+C) and repeat the procedure for terminal1 and terminal2. This will fix the problem. 
 # If no problem arises, run the following commands
 get plan
