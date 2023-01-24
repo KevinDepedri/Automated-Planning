@@ -38,7 +38,7 @@ sudo apt upgrade
 sudo apt-get python3-pip
 ```
 
-In this guide the root path used in all the bash code is `/mnt/c/Users/you_user/your_workspace/`. This is the path that need to be used in WSL to reach the file present in the directories which are normally accessible in windows. If you are following this guide using a native Linux OS then sobstitute these paths with the correct path for you.
+In this guide the root path used in all the bash code is `/mnt/c/Users/you_user/your_workspace/`. This is the path that need to be used in WSL to reach the file present in the directories which are normally accessible in windows (since windows is seen as a mounted device in the linux subsystem). If you are following this guide using a native Linux OS then sobstitute these paths with the path correct for you.
 
 ****
 # Installing the planners
@@ -329,7 +329,7 @@ Running task 2 using *Downward* from planutils returns the following plan
 
 ![Task-2: Downward run with alias lama, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task2/task2_solution1.PNG)
 
-After a few second, the search returns the following improved plan
+After a few seconds, the search returns the following improved plan
 
 ![Task-2: Downward run with alias lama, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task2/task2_solution2.PNG)
 
