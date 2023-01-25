@@ -38,12 +38,12 @@ sudo apt upgrade
 sudo apt-get python3-pip
 ```
 
-In this guide the root path used in all the bash code is `/mnt/c/Users/you_user/your_workspace/`. This is the path that need to be used in WSL to reach the file present in the directories which are normally accessible in windows (since windows is seen as a mounted device in the linux subsystem). If you are following this guide using a native Linux OS then sobstitute these paths with the path correct for you.
+In this guide the root path used in all the bash code is `/mnt/c/Users/<you_user>/<your_workspace>/`. This is the path that need to be used in WSL to reach the file present in the directories which are normally accessible in windows (since windows is seen as a mounted device in the linux subsystem). If you are following this guide using a native Linux OS then sobstitute these paths with the path correct for you.
 
 ****
 # Installing the planners
 ## PLANUTILS
-Planutils is a suit of planners that allows to install a virtual environment where planners can be quickly installed and runned. It requires singularity to work, which is based on GO. Follow the ensuing steps to install it.
+Planutils is a suite of planners that allows to install a virtual environment where planners can be quickly installed and ran. It requires singularity, which is based on GO. Follow the ensuing steps to install it.
 1. Install GO and Singularity
 ```bash
 sudo apt-get update && \
