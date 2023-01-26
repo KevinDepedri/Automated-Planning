@@ -15,14 +15,14 @@ Description of the 5 different tasks:
   - Task 4: Extension of task 2 to temportal domain. All the actions have been updated with a specific duration and with some time constraints. The goal is obtained minimizing the required time. To run this task Optic planner or TemporalFastDownward planner is required.
   - Task 5: Extension of task 4 to a more sophisticate planner which allows to define a C++ code for each action. Once a plan is obtained (minimizing the time required) it is possible to run the plan, simulating the behavior of the proposed solution. The simulation is based on the implemented C++ codes. To run this task ROS2 and PlanSys2 are required.
 
-All the previously listed planners used are available and ready to install on Linux. The best option is to use a Linux machine. Another good and quick option is to install the Linux Kernel directly in Windows (supported on Windows 10/11). 
+All the previously listed planners used are available and ready to install on Linux. The best option is to use a Linux machine. Another good and quick option is to install the Linux Kernel directly on Windows (supported on Windows 10/11). 
 To install the Linux kernel on Windows follow the next section. Otherwise, go directly to the section regarding the installation of the planners on Linux.
 
 ****
 # Installing WSL and Ubuntu
-WSL(Windows Subsystem for Linux) is the main component required to install and run a Linux Kernel directly on Windows. Once WSL is inistalled it is possible to install the Linux distribution that you prefer. Follow the ensuing steps to enable WSL and install the Ubuntu distro.
-  1. Enable virtualizzation (task manager -> cpu -> virtualization, to see if it is already enabled). If it is not then enable it from the BIOS
-  2. From start search for 'Enable disable windows features', here make sure 'Windows Subsystem for Linux' is enabled
+WSL (Windows Subsystem for Linux) is the main component required to install and run a Linux Kernel directly on Windows. Once WSL is inistalled it is possible to install the Linux distribution that you prefer. Follow the ensuing steps to enable WSL and install the Ubuntu distro.
+  1. Enable virtualizzation (check: task manager -> cpu -> virtualization to see if it is already enabled). If it is not then enable it from the BIOS
+  2. From Wdinwos Start Menu search for 'Enable disable windows features', here make sure 'Windows Subsystem for Linux' is enabled
   3. Run in powershell
   ```shell
   wsl --install
@@ -31,7 +31,7 @@ WSL(Windows Subsystem for Linux) is the main component required to install and r
   5. Run Ubuntu directly from the installed icon or from Windows terminal (best option to use multiple terminals)
   6. If Windows terminal is not installed then [download it from the Windows store](https://www.microsoft.com/store/productId/9N0DX20HK701)
 
-Once in your Ubuntu run the following line of code to update your package and to get ready for the next steps
+Once in your Ubuntu run the following line of code to update your packages and to get ready for the next steps
 ```bash
 sudo apt update
 sudo apt upgrade
@@ -116,7 +116,7 @@ wget https://www.uni-ulm.de/fileadmin/website_uni_ulm/iui.inst.090/panda/PANDA.j
 ```
 
 ## PLANSYS2
-PlanSys2 is based on ROS2. Furthermore, 2 more packages are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS). Follow the ensuing steps to install everything
+PlanSys2 is based on ROS2. To compile a PlanSys2 project you will need ROS2 and 2 more packages that are required to build the dependencies of the project (Rosdep) and to compile it (Colcon for ROS2). Follow the ensuing steps to install everything
 
 ### ROS2
 1. Set locale
@@ -152,7 +152,7 @@ sudo apt update
 sudo apt upgrade
   ```
 
-6. Install ROS-Base (Bare Bones): Communication libraries, message packages, command line tools. No GUI tools (useless since we are working from WSL terminal).
+6. Install ROS-Base (Bare Bones): Communication libraries, message packages, command line tools. This command will not install GUI tools (they are useless since we are working from WSL terminal).
   ```bash
 sudo apt install ros-humble-ros-base
   ```
@@ -184,7 +184,7 @@ rosdep update
 
 ***
 # Running the planners
-To run the planners on the domain and problem files of this assignment, first of all download this repository
+To run the planners on the domain and problem files of this assignment you will need, first of all, to download this repository
 1. Get to your workspace
   ```bash
 cd <your_workspace>
@@ -227,7 +227,7 @@ cd <your_workspace>/planning/task3
 ```
 
 ## PLANSYS2 
-Two terminals are necessary to run PlanSys2.
+To run PlanSys2 two terminals are required. You can easily manage two Ubuntu terminals inside the same application using Windows Terminal.
 #### TERMINAL 1
 Terminal one is used to build the dependencies, compile the project and host the PlanSys2 planner based on ROS. To do so follow the ensuing procedure
 1. Get inside the project folder
@@ -265,7 +265,7 @@ source install/setup.bash
 ros2 launch plansys2_task5 plansys2_task5_launch.py
   ```
   
-All the above listed procedure for terminal1 is automatically exetcuted by running the file `compile_and_run.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
+All the above listed procedure for Terminal1 is automatically exetcuted by running the file `compile_and_run.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
   ```bash
 cd <your_workspace>/planning/task5/plansys2_task5/
 bash compile_and_run.sh
@@ -274,7 +274,7 @@ bash compile_and_run.sh
 #### TERINAL 2
 Once terminal 1 has been set up, open a new terminal. Terminal two is used to run the PlanSys2_terminal, which is used to push into the planner all the wanted data (instances, predicates, goal), to compute a plan and to run it.
 
-1. Repeat step 1, 2 and 6 also for this terminal
+1. Repeat step 1, 2 and 6 (of Terminal1) also for this terminal
   ```bash
 cd <your_workspace>/planning/task5/plansys2_task5/
 source /opt/ros/humble/setup.bash
@@ -301,7 +301,7 @@ get plan
 run
   ```
   
-The first two steps of the above listed procedure for terminal2 are automatically exetcuted by running the file `run_terminal.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
+The first two steps of the above listed procedure for Terminal2 are automatically exetcuted by running the file `run_terminal.sh` present in the plansys2_task5 folder. Therefore, you can just run the two following commands to execute all the procedure
   ```bash
 cd <your_workspace>/planning/task5/plansys2_task5/
 bash run_terminal.sh
@@ -347,7 +347,7 @@ Running task 3 using *Panda* from planutils returns the following plan
 That solution is based on the following list of hierarchical tasks, methods and actions
 ![Task-3: Panda run, solution 1, actions](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task3/task3_solution1_actions.PNG)
 
-We can notice that this plan is not optimal due to the task `deliver_by_robot`. For this reason, since no options are available on panda to perform a larger search and look for alternative solutions, we have decided to comment the task that led to this suboptimal behavior. Then we ran again the search obtaining the following plan
+We can notice that this plan is not optimal due to the task `deliver_by_robot`. For this reason, since no options are available on Panda to perform a larger search and look for alternative solutions, we have decided to comment the task that led to this suboptimal behavior. Then we ran again the search obtaining the following plan
 
 ![Task-3: Panda run, solution 2](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task3/task3_solution2.PNG)
 
@@ -362,7 +362,8 @@ Running task 4 using *Optic* from planutils returns the following plan
 
 ![Task-4: Optic run, solution 1](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task4/task4_solution1.PNG)
 
-The search is then terminated since Optic does not allow to look for other plans. Unfortunately, the plan found above is suboptimal, this is due to the fact that the robot unload and loads itself uselessly at second 19 and 20, loosing 2 second over the time of the possible optimal solution.
+The previous plan is sub-optimal, this is due to the fact that the robot unload and loads itself uselessly at seconds 19 and 20, loosing 2 seconds over the time of the possible optimal solution. Therefore, we decided to let the planner run to see if the optimal solution could be found. The result is that, as Downward
+in Task-2, also Optic ran out of memory and crashed after a few hours of search. This does not mean that the optimal solution does not exist, it simply means that we have not enough memory to find it.
 
 ## Task 5
 Running task 5 using PlanSys2 returns the following plan on the PlanSys2 terminal
@@ -372,4 +373,4 @@ Running task 5 using PlanSys2 returns the following plan on the PlanSys2 termina
 In the meanwhile, the PlanSys2 planner on the first terminal returns the following sum up of the actions performed
 ![Task-5: PlanSys2, solution 1, planner](https://github.com/KevinDepedri/Automated-Planning/blob/main/computed_plans/task5/task5_solution1_planner.PNG)
 
-The search is then terminated since PlanSys2 does not allow to look for other plans. Unfortunately, the plan found above is suboptimal, this is due to the fact that the robot unload and loads itself uselessly at second 23 and 28, loosing 2 second over the time of the possible optimal solution.
+The search is then terminated since PlanSys2 does not allow to look for other plans. Unfortunately, the plan found above is suboptimal, this is due to the fact that the robot unload and loads itself uselessly at seconds 23 and 28, loosing 2 seconds over the time of the possible optimal solution.
