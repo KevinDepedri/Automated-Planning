@@ -311,6 +311,7 @@ source /mnt/c/Users/<your_user>/<your_workspace>/downloaded/plansys2_task/pddl/t
 # If no problem arises, run the following commands
 get plan
 run
+# If after the command 'run' nothing happens on Terminal2 then look at Terminal1. If here a message like 'process has died' is present. Then stop both the terminals (pressing CTRL+C) and repeat the procedure for terminal1 and terminal2. This will fix the problem. 
   ```
 
 ***
