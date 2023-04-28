@@ -81,6 +81,7 @@ sudo make install
 2. Fix singularity mount host options
 ```bash
 cd /usr/local/etc/singularity
+sudo chmod u+rw singularity.conf  # Ensure that the file can be modified and saved
 vim singularity.conf
 # Now press 'shift+I' to enter insert mode
 # Navigate down the file until the voice 'mount hostfs = no' is found
@@ -101,6 +102,7 @@ planutils setup
 ```bash
 planutils install <downward|tfd|optic>  #Install one planner at time
 ```
+6. If an error like ``./install: line3: apptainer: command not found`` is shown in the terminal, please follow the section ``Install Ubuntu packages`` at the following [link](https://apptainer.org/docs/admin/main/installation.html) to fix the problem.
 
 ## PANDA
 Panda is a planner based on Java. it can be donwloaded and ran using the following commands
@@ -306,7 +308,7 @@ The first two steps of the above listed procedure for Terminal2 are automaticall
 cd <your_workspace>/planning/task5/plansys2_task5/
 bash run_terminal.sh
 # One in the terminal run
-source /mnt/c/Users/<your_user>/<your_workspace>/downloaded/plansys2_task/pddl/task5_problem 1  #Update this path according to your system
+source /mnt/c/Users/<your_user>/<your_workspace>/plansys2_task5/pddl/task5_problem 1  #Update this path according to your system
 # If at this points error like 'Could not add the predicate <name_of_predicate>' start to manifest, please stop both the terminals (pressing CTRL+C) and repeat the procedure for terminal1 and terminal2. This will fix the problem. 
 # If no problem arises, run the following commands
 get plan
