@@ -81,7 +81,7 @@ sudo make install
 2. Fix singularity mount host options
 ```bash
 cd /usr/local/etc/singularity
-sudo chmod u+rw singularity.conf  # Ensure that the file can be modified and saved
+sudo chmod u+rw singularity.conf
 vim singularity.conf
 # Now press 'shift+I' to enter insert mode
 # Navigate down the file until the voice 'mount hostfs = no' is found
