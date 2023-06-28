@@ -9,8 +9,8 @@ The repository is composed of:
 - Guide to install all the needed material to run the code (this readme)
 
 Description of the 5 different tasks:
-  - Task 1: Basic structure of the problem developed in PDDL. Here we have a robotic agent which is appoited to bring the required supplies to some injured people. To run this task FastDownard planner is required.
-  - Task 2: Extension of the previous problem developed in PDDL. Here the robotic agent has at its disposal a carrier which allows to transport supplies in a more efficient way. To run this task FastDownard planner is required.
+  - Task 1: Basic structure of the problem developed in PDDL. Here we have a robotic agent which is appoited to bring the required supplies to some injured people. To run this task FastDownward planner is required.
+  - Task 2: Extension of the previous problem developed in PDDL. Here the robotic agent has at its disposal a carrier which allows to transport supplies in a more efficient way. To run this task FastDownward planner is required.
   - Task 3: Conversion of task 2 from PDDL to HDDL. Here tasks and methods are introduced and made compatible with the previously developed actions. To run this task Panda planner is required.
   - Task 4: Extension of task 2 to temportal domain. All the actions have been updated with a specific duration and with some time constraints. The goal is obtained minimizing the required time. To run this task Optic planner or TemporalFastDownward planner is required.
   - Task 5: Extension of task 4 to a more sophisticate planner which allows to define a C++ code for each action. Once a plan is obtained (minimizing the time required) it is possible to run the plan, simulating the behavior of the proposed solution. The simulation is based on the implemented C++ codes. To run this task ROS2 and PlanSys2 are required.
